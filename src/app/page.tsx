@@ -1,5 +1,7 @@
 "use client";
-import Navbar from "@/components/navbar";
+import Feature from "@/components/Features";
+import Landingpage from "@/components/Hero/landingpage";
+import Navbar from "@/components/Navbar/navbar";
 import { useState, useEffect } from "react";
 
 export default function Home() {
@@ -17,8 +19,10 @@ export default function Home() {
     };
   }, []);
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main>
       <Navbar scrollTop={scrollTop}></Navbar>
+      <Landingpage></Landingpage>
+      <Feature></Feature>
     </main>
   );
 }

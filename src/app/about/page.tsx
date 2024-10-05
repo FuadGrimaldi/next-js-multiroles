@@ -1,7 +1,25 @@
-export default function about() {
+"use client";
+import Navbar from "@/components/Navbar/navbar";
+import { useState, useEffect } from "react";
+
+export default function About() {
+  const [scrollTop, setScrollTop] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = (event: any) => {
+      setScrollTop(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   return (
-    <h1 className="flex min-h-screen flex-col items-center justify-between p-24">
-      About Us
-    </h1>
+    <main>
+      <Navbar scrollTop={scrollTop}></Navbar>
+      <div>Hello About</div>
+    </main>
   );
 }
