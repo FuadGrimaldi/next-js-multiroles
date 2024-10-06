@@ -8,8 +8,8 @@ const Feature = () => {
     <>
       {/* <!-- ===== Features Start ===== --> */}
       <section
-        id="features"
-        className="px-6 lg:px-[120px] pb-6 lg:pt-0 pt-[50px]"
+        id="Features"
+        className="px-6 lg:px-[120px] pb-6 lg:pt-[70px] pt-[50px]"
       >
         <div className="mx-auto max-w-c-1315 px-4 md:px-8 xl:px-0">
           {/* <!-- Section Title Start --> */}

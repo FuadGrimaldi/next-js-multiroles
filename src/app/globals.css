@@ -36,6 +36,32 @@ body {
   }
 }
 
+@keyframes lineMove {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.animate-line1 {
+  animation: lineMove 5s linear infinite;
+}
+
+.animate-line2 {
+  animation: lineMove 4s linear infinite;
+}
+
+.animate-line3 {
+  animation: lineMove 3s linear infinite;
+}
+
+.bg-stroke {
+  --tw-bg-opacity: 1;
+  background-color: rgb(238 238 238 / var(--tw-bg-opacity));
+}
+
 #LandingPage {
   background-image: url("../../public/assets/Group\ 26953.png");
   background-position: top;
@@ -45,6 +71,9 @@ body {
 
 #About {
   background-image: url("../../public/assets/bgabout.png");
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .font-montserrat {

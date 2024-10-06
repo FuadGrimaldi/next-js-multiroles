@@ -1,3 +1,4 @@
+import Lines from "@/components/Lines";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -13,8 +14,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full bg-gray-900">
-      <body className="h-full">{children}</body>
+    <html lang="en" className="h-full" style={{ scrollBehavior: "smooth" }}>
+      <body className="h-full">
+        <Lines></Lines>
+        {children}
+      </body>
     </html>
   );
 }

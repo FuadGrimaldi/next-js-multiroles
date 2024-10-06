@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import Link from "next/link"; // Import Link from Next.js
 
 const Navbar = ({ scrollTop }: { scrollTop: any }) => {
   return (
@@ -36,24 +37,36 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
             <li>
-              <a className="text-base hover:underline transition-all duration-500">
+              <Link
+                href="/"
+                className="text-base hover:underline transition-all duration-500"
+              >
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="text-base hover:underline transition-all duration-500">
+              <Link
+                href="/about"
+                className="text-base hover:underline transition-all duration-500"
+              >
                 About Us
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="text-base hover:underline transition-all duration-500">
+              <Link
+                href="#features"
+                className="text-base hover:underline transition-all duration-500"
+              >
                 Features
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="text-base hover:underline transition-all duration-500">
+              <Link
+                href="/login"
+                className="text-base hover:underline transition-all duration-500"
+              >
                 Sign In
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -72,60 +85,65 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
       <div className="navbar-end flex items-center space-x-4">
         <ul className="menu menu-horizontal hidden lg:flex px-1">
           <li>
-            <motion.a
+            <motion.div
               className="text-xl hover:underline transition-all duration-500"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              Home
-            </motion.a>
+              <Link href="/">Home</Link>
+            </motion.div>
           </li>
           <li>
-            <motion.a
-              href="/about"
+            <motion.div
               className="text-xl hover:underline transition-all duration-500"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              About
-            </motion.a>
+              <Link href="#Features">Features</Link>
+            </motion.div>
           </li>
           <li>
-            <motion.a
+            <motion.div
               className="text-xl hover:underline transition-all duration-500"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              Support
-            </motion.a>
+              <Link href="/support">Support</Link>
+            </motion.div>
           </li>
           <li>
             <details>
               <summary className="text-xl hover:underline transition-all duration-500">
                 Docs
               </summary>
-              <ul className="p-2">
+              <ul className="mx-6 w-[130px]">
+                {" "}
+                {/* Tambahkan kelas w-full di sini */}
                 <li>
-                  <a className="text-base">FAQ</a>
+                  <Link href="/docs/faq" className="text-base ">
+                    FAQ
+                  </Link>
                 </li>
                 <li>
-                  <a className="text-base">Features 2</a>
+                  <Link href="/docs/features" className="text-base ">
+                    How To
+                  </Link>
                 </li>
               </ul>
             </details>
           </li>
           <li>
-            <motion.a
+            <motion.div
               className="bg-gray-100 rounded-[15px] font-montserrat text-xl text-[#3f2013] px-6 py-3"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              Dashboard
-            </motion.a>
+              <Link href="/login">Dashboard</Link>
+            </motion.div>
           </li>
         </ul>
       </div>
