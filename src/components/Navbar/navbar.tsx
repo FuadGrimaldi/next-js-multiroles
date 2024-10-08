@@ -1,8 +1,10 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link"; // Import Link from Next.js
+import { usePathname } from "next/navigation";
 
 const Navbar = ({ scrollTop }: { scrollTop: any }) => {
+  const pathName = usePathname();
   return (
     <motion.div
       className={
@@ -39,7 +41,9 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
             <li>
               <Link
                 href="/"
-                className="text-base hover:underline transition-all duration-500"
+                className={`text-base hover:underline transition-all duration-500 ${
+                  pathName === "/" ? "bg-[#10375C]" : "bg-none"
+                }`}
               >
                 Home
               </Link>
@@ -91,7 +95,14 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <Link href="/">Home</Link>
+              <Link
+                href="/"
+                className={`text-xl hover:underline transition-all duration-500 ${
+                  pathName === "/" ? "text-[#10375C]" : "text-white"
+                }`}
+              >
+                Home
+              </Link>
             </motion.div>
           </li>
           <li>
@@ -101,7 +112,14 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <Link href="#Features">Features</Link>
+              <Link
+                href="#Features"
+                className={`text-xl hover:underline transition-all duration-500 ${
+                  pathName === "#Features" ? "text-[#10375C]" : "text-white"
+                }`}
+              >
+                Features
+              </Link>
             </motion.div>
           </li>
           <li>
@@ -111,7 +129,15 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <Link href="/support">Support</Link>
+              <Link href="/support">
+                <li
+                  className={`text-xl hover:underline transition-all duration-500 ${
+                    pathName === "/support" ? "text-[#10375C]" : "text-white"
+                  }`}
+                >
+                  Support
+                </li>
+              </Link>
             </motion.div>
           </li>
           <li>
@@ -123,12 +149,24 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
                 {" "}
                 {/* Tambahkan kelas w-full di sini */}
                 <li>
-                  <Link href="/docs/faq" className="text-base ">
+                  <Link
+                    href="/docs/faq"
+                    className={`text-base hover:underline transition-all duration-500 ${
+                      pathName === "/docs/faq" ? "text-[#10375C]" : "text-white"
+                    }`}
+                  >
                     FAQ
                   </Link>
                 </li>
                 <li>
-                  <Link href="/docs/features" className="text-base ">
+                  <Link
+                    href="/docs/howto"
+                    className={`text-base hover:underline transition-all duration-500 ${
+                      pathName === "/docs/howto"
+                        ? "text-[#10375C]"
+                        : "text-white"
+                    }`}
+                  >
                     How To
                   </Link>
                 </li>
@@ -137,12 +175,21 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
           </li>
           <li>
             <motion.div
-              className="bg-gray-100 rounded-[15px] font-montserrat text-xl text-[#3f2013] px-6 py-3"
+              className={`${
+                pathName === "/login"
+                  ? "bg-[#10375C] text white "
+                  : "bg-gray-100 text-[#3f2013]"
+              } rounded-[15px] font-montserrat text-xl px-6 py-3}`}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <Link href="/login">Dashboard</Link>
+              <Link
+                href="/login"
+                className="text-xl hover:underline transition-all duration-500"
+              >
+                Dashboard
+              </Link>
             </motion.div>
           </li>
         </ul>
