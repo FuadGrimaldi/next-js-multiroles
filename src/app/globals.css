@@ -69,6 +69,13 @@ body {
   background-size: cover;
 }
 
+#loginPage {
+  background-image: url("../../public/assets/Group\ 26953.png");
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 #About {
   background-image: url("../../public/assets/bgabout.png");
   background-position: top;

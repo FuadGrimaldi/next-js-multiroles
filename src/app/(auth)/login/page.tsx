@@ -1,9 +1,18 @@
-import React from "react";
+import Signin from "@/components/Auth/Signin";
+import { Metadata } from "next";
 
-export default function PageLogin() {
+export const metadata: Metadata = {
+  title: "Login Incube",
+  description: "This is Login page for Incube",
+  // other metadata
+};
+
+const SigninPage = () => {
   return (
-    <div className="bg-gray-900">
-      <h1>Login</h1>
-    </div>
+    <>
+      <Signin />
+    </>
   );
-}
+};
+
+export default SigninPage;

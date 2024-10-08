@@ -1,9 +1,7 @@
 "use client";
 import Feature from "@/components/Features";
-import Footer from "@/components/Footer";
 import FunFact from "@/components/FunFact";
 import Landingpage from "@/components/Hero/landingpage";
-import Navbar from "@/components/Navbar/navbar";
 import { useState, useEffect } from "react";
 
 export default function Home() {
@@ -22,11 +20,9 @@ export default function Home() {
   }, []);
   return (
     <main>
-      <Navbar scrollTop={scrollTop}></Navbar>
       <Landingpage></Landingpage>
       <Feature></Feature>
       <FunFact></FunFact>
-      <Footer></Footer>
     </main>
   );
 }
