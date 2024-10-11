@@ -129,14 +129,13 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <Link href="/support">
-                <li
-                  className={`text-xl hover:underline transition-all duration-500 ${
-                    pathName === "/support" ? "text-[#10375C]" : "text-white"
-                  }`}
-                >
-                  Support
-                </li>
+              <Link
+                href="/support"
+                className={`text-xl hover:underline transition-all duration-500 ${
+                  pathName === "/support" ? "text-[#10375C]" : "text-white"
+                }`}
+              >
+                Support
               </Link>
             </motion.div>
           </li>

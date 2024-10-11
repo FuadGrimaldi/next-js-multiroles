@@ -2,6 +2,10 @@
 
 /public
 
+# server local
+/server/__pycache__
+/server/myenv
+
 # dependencies
 /node_modules
 /.pnp

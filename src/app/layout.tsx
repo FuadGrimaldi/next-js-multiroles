@@ -5,6 +5,15 @@ import "./globals.css";
 import { useState, useEffect } from "react";
 import Lines from "@/components/Lines";
 import Footer from "@/components/Footer";
+import { usePathname } from "next/navigation";
+
+const disableNavbar = [
+  "/admin/user",
+  "/admin/dashboard",
+  "/admin",
+  "/user",
+  "/user/dashboard",
+];
 
 export default function RootLayout({
   children,
@@ -12,6 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const [scrollTop, setScrollTop] = useState(0);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,10 +38,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body className="h-full">
-        <Navbar scrollTop={scrollTop} />
+        {!disableNavbar.includes(pathname) && <Navbar scrollTop={scrollTop} />}
         <Lines></Lines>
         {children}
-        <Footer></Footer>
+        {!disableNavbar.includes(pathname) && <Footer />}
       </body>
     </html>
   );
