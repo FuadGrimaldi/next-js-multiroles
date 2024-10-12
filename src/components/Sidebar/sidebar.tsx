@@ -3,6 +3,7 @@ import { FC, useRef, useState, useEffect } from "react";
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 import { sidebarStructure } from "./structur";
+import Link from "next/link";
 
 interface SidebarProps {
   setExpand: (value: boolean) => void;
@@ -112,23 +113,6 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
         </g>
       </svg>
     );
-    icons_map["transaksi"] = (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5 text-current"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="m20.247634 1c1.0125221 0 1.8333334.82081129 1.8333334 1.83333333s-.8208113 1.83333334-1.8333334 1.83333334c-.3158442 0-.6130339-.07986936-.8724738-.22051281l-3.0249251 3.47961717c.1346337.25513483.2108509.5458717.2108509.85441003 0 1.01252204-.8208113 1.83333334-1.8333334 1.83333334-.9820883 0-1.7838173-.7722101-1.8311257-1.74256896l-2.2033918-.75849737c-.336256.40778098-.84535009.66773299-1.41515923.66773299-.32712483 0-.63423886-.08567643-.90012689-.2358141l-2.87560465 2.41277624c.05416355.1730906.08335496.3572185.08335496.5481644 0 1.012522-.8208113 1.8333333-1.83333334 1.8333333s-1.83333333-.8208113-1.83333333-1.8333333c0-1.0125221.82081129-1.83333335 1.83333333-1.83333335.33090488 0 .64133381.08766791.90932763.24104456l2.86960725-2.40787374c-.05621505-.1760311-.0865583-.3636207-.0865583-.55829735 0-1.01252204.8208113-1.83333333 1.83333334-1.83333333.97577423 0 1.77350093.76231258 1.83011983 1.7238777l2.2160025.76325559c.336304-.39976002.8402621-.65379996 1.4035544-.65379996.2130474 0 .4176071.03634016.6078186.10315996l3.1693503-3.64581344c-.0588143-.17965899-.0906208-.37154554-.0906208-.57086091 0-1.01252204.8208113-1.83333333 1.8333333-1.83333333z"
-          opacity=".48"
-          fill="currentColor"
-        />
-        <path
-          d="m21.1666667 9.60855714c.506261 0 .9166666.41040566.9166666.91666666v10.7540685c0 .2761423-.2238576.5-.5.5h-2.6666666c-.2761424 0-.5-.2238577-.5-.5v-10.7540685c0-.506261.4104056-.91666666.9166666-.91666666zm-5.5 6.42549146c.506261 0 .9166666.4104057.9166666.9166667v4.328577c0 .2761423-.2238576.5-.5.5h-2.6666666c-.2761424 0-.5-.2238577-.5-.5v-4.328577c0-.506261.4104056-.9166667.9166666-.9166667zm-5.5-1.8405511c.506261 0 .9166666.4104057.9166666.9166667v6.1691281c0 .2761423-.2238576.5-.5.5h-2.66666663c-.27614238 0-.5-.2238577-.5-.5v-6.1691281c0-.506261.41040564-.9166667.91666666-.9166667zm-5.50000003 4.7135227c.50626102 0 .91666666.4104057.91666666.9166667v1.4556054c0 .2761423-.22385762.5-.5.5h-2.66666666c-.27614238 0-.5-.2238577-.5-.5v-1.4556054c0-.506261.41040564-.9166667.91666666-.9166667z"
-          fill="currentColor"
-        />
-      </svg>
-    );
     icons_map["perusahaan"] = (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -195,87 +179,89 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
 
     return (
       <li key={index}>
-        <a
-          role="button"
-          tabIndex={0}
-          id={item.id}
-          onClick={() => {
-            if ("child" in item) {
-              handleToggle(item.name);
-            } else if ("link" in item) {
-              handleNavigate(item.name);
-            }
-          }}
-          onKeyDown={(event) => {
-            const { code } = event;
-            if (code === "Space") {
+        <Link href={item.link || "#"} passHref legacyBehavior>
+          <a
+            role="button"
+            tabIndex={0}
+            id={item.id}
+            onClick={() => {
               if ("child" in item) {
                 handleToggle(item.name);
               } else if ("link" in item) {
                 handleNavigate(item.name);
               }
-            }
-          }}
-          className={[
-            "group m-0 flex cursor-pointer rounded-lg items-center justify-between h-12 py-0 pr-3 mb-1 focus:outline-none",
-            recursive === 0 ? "pl-4" : recursive === 1 ? "pl-11" : "pl-16",
-            activeName === item.name || activeName.split(".")[0] === item.name
-              ? `text-black font-semibold ${
-                  item.parent ? "text-black bg-white" : "bg-transparent"
-                }`
-              : `text-white ${item.parent && ""}`,
-            "hover:bg-slate-300/20",
-            classesActive,
-          ].join(" ")}
-        >
-          <div className="flex items-center gap-3">
-            {item.icon ? (
-              item.icon === "dot" ? (
-                <div className="h-3 w-3 flex items-center justify-center">
-                  <div
-                    className={[
-                      `${classesActive ? "h-2 w-2 " : "h-1 w-1"}`,
-                      "bg-current rounded-full duration-200",
-                    ].join(" ")}
-                  ></div>
-                </div>
-              ) : (
-                <div className="p-2 bg-[#ffb800] rounded-lg">
-                  {generateIcon(item.icon)}
-                </div>
-              )
-            ) : null}
-            <div
-              className={`truncate ${
-                isExpand ? "" : isExpandOnHover ? "" : "w-0 h-0 opacity-0"
-              }`}
-            >
-              {item.title}
-            </div>
-          </div>
-          {"child" in item ? (
-            <div
-              className={`${
-                isExpand ? "" : isExpandOnHover ? "" : "w-0 h-0 opacity-0"
-              }`}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
+            }}
+            onKeyDown={(event) => {
+              const { code } = event;
+              if (code === "Space") {
+                if ("child" in item) {
+                  handleToggle(item.name);
+                } else if ("link" in item) {
+                  handleNavigate(item.name);
+                }
+              }
+            }}
+            className={[
+              "group m-0 flex cursor-pointer rounded-lg items-center justify-between h-12 py-0 pr-3 mb-1 focus:outline-none",
+              recursive === 0 ? "pl-4" : recursive === 1 ? "pl-11" : "pl-16",
+              activeName === item.name || activeName.split(".")[0] === item.name
+                ? `text-black font-semibold ${
+                    item.parent ? "text-black bg-white" : "bg-transparent"
+                  }`
+                : `text-white ${item.parent && ""}`,
+              "hover:bg-slate-300/20",
+              classesActive,
+            ].join(" ")}
+          >
+            <div className="flex items-center gap-3">
+              {item.icon ? (
+                item.icon === "dot" ? (
+                  <div className="h-3 w-3 flex items-center justify-center">
+                    <div
+                      className={[
+                        `${classesActive ? "h-2 w-2 " : "h-1 w-1"}`,
+                        "bg-current rounded-full duration-200",
+                      ].join(" ")}
+                    ></div>
+                  </div>
+                ) : (
+                  <div className="p-2 bg-[#ffb800] rounded-lg">
+                    {generateIcon(item.icon)}
+                  </div>
+                )
+              ) : null}
+              <div
+                className={`truncate ${
+                  isExpand ? "" : isExpandOnHover ? "" : "w-0 h-0 opacity-0"
+                }`}
               >
-                <path
-                  fillRule="evenodd"
-                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
+                {item.title}
+              </div>
             </div>
-          ) : (
-            false
-          )}
-        </a>
+            {"child" in item ? (
+              <div
+                className={`${
+                  isExpand ? "" : isExpandOnHover ? "" : "w-0 h-0 opacity-0"
+                }`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            ) : (
+              false
+            )}
+          </a>
+        </Link>
         {"child" in item ? (
           <ul
             ref={(el) => {
@@ -316,7 +302,7 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
       ].join(" ")}
     >
       <button
-        className="absolute z-50 top-16 -right-3 bg-white hover:bg-slate-100 text-slate-500 p-0.5 rounded-full border border-slate-200"
+        className="absolute z-50 top-16 -right-5 botton-4 bg-white hover:bg-slate-100 text-slate-500 p-3 rounded-full border border-slate-200"
         onClick={() => {
           setIsExpand(!isExpand);
           setExpand(!isExpand);

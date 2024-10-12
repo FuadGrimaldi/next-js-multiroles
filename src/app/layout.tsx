@@ -13,6 +13,8 @@ const disableNavbar = [
   "/admin",
   "/user",
   "/user/dashboard",
+  "/user/report",
+  "/user/setting",
 ];
 
 export default function RootLayout({

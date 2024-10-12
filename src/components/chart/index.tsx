@@ -14,7 +14,7 @@ import {
   Legend,
 } from "chart.js";
 
-// Mendaftar skala dan elemen yang digunakan
+// Register scales and elements used by the chart
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -39,22 +39,36 @@ function Chart() {
         "http://127.0.0.1:8000/humidity"
       );
 
-      const currentTemperature = temperatureResponse.data.Temperature;
-      const currentHumidity = humidityResponse.data.Humidity;
+      // Assuming the response contains an array of data
+      const temperatureArray = temperatureResponse.data.Temperature;
+      const humidityArray = humidityResponse.data.Humidity;
 
-      setTemperatureData((prevData) => [...prevData, currentTemperature]);
-      setHumidityData((prevData) => [...prevData, currentHumidity]);
+      console.log("Temperature Data:", temperatureArray);
+      console.log("Humidity Data:", humidityArray);
 
-      const currentTime = new Date().toLocaleTimeString();
-      setLabels((prevLabels) => [...prevLabels, currentTime]);
+      // Limit the data to the latest 50 entries
+      const limitedTemperature = temperatureArray.slice(-50);
+      const limitedHumidity = humidityArray.slice(-50);
+
+      // Store only the latest 50 data points
+      setTemperatureData(limitedTemperature);
+      setHumidityData(limitedHumidity);
+
+      // Create labels for the last 50 data points
+      const generatedLabels = limitedTemperature.map(
+        (_: number, index: number) => {
+          return `Time ${index + 1}`;
+        }
+      );
+
+      setLabels(generatedLabels);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
   useEffect(() => {
-    const intervalId = setInterval(fetchData, 2000);
-    return () => clearInterval(intervalId);
+    fetchData(); // Fetch data once on mount
   }, []);
 
   const chartData = {
@@ -87,7 +101,7 @@ function Chart() {
       },
       title: {
         display: true,
-        text: "Real-time Incubator Temperature and Humidity",
+        text: "Incubator Temperature and Humidity (Last 50 Data Points)",
       },
     },
     scales: {
@@ -102,15 +116,20 @@ function Chart() {
       x: {
         title: {
           display: true,
-          text: "Time (HH:MM:SS)",
+          text: "Index",
         },
       },
     },
   };
 
   return (
-    <div className="h-full w-1/2">
-      <Line data={chartData} />
+    <div className="flex">
+      <div className="h-full w-1/2">
+        <Line data={chartData} options={options} />
+      </div>
+      <div className="h-full w-1/2">
+        <Line data={chartData} options={options} />
+      </div>
     </div>
   );
 }

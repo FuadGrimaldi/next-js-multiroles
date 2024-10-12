@@ -88,6 +88,21 @@ body {
   background-size: cover;
 }
 
+.app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.incubator-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  width: 600px;
+}
+
 .font-montserrat {
   font-family: "Monserrat", sans-serif;
 }
