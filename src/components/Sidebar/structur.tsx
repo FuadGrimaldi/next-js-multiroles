@@ -53,6 +53,14 @@ const sidebarStructure = [
       },
     ],
   },
+  {
+    id: "logout",
+    title: "Logout",
+    name: "Logout",
+    parent: true,
+    icon: "perusahaan",
+    link: "/user/Logout",
+  },
 ];
 
 export { sidebarStructure };
