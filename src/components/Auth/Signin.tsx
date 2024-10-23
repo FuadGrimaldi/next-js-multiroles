@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, SyntheticEvent } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation"; // untuk melakukan redirect
+import { signIn } from "next-auth/react";
 
 const Signin = () => {
   const [data, setData] = useState({
@@ -20,6 +21,11 @@ const Signin = () => {
     setError("");
     setIsLoading(true);
     try {
+      const singInData = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
       const response = await axios.post("/api/login", {
         email: data.email,
         password: data.password,

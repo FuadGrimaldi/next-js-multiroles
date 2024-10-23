@@ -22,9 +22,6 @@ export const POST = async (request: Request) => {
       { status: 200 }
     );
 
-    // Menyimpan userId di dalam cookies
-    response.cookies.set("userId", user.id, { path: "/", httpOnly: true }); // pastikan untuk menggunakan httpOnly untuk keamanan
-
     return response;
   } catch (error) {
     console.error("Error during login:", error);
