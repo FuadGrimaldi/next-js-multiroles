@@ -159,14 +159,14 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
                 </li>
                 <li>
                   <Link
-                    href="/docs/howto"
+                    href="/docs"
                     className={`text-base hover:underline transition-all duration-500 ${
                       pathName === "/docs/howto"
                         ? "text-[#10375C]"
                         : "text-white"
                     }`}
                   >
-                    How To
+                    Docs
                   </Link>
                 </li>
               </ul>
