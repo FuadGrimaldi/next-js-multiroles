@@ -59,7 +59,7 @@ const sidebarStructure = [
     name: "Logout",
     parent: true,
     icon: "perusahaan",
-    link: "/user/Logout",
+    link: "/logout",
   },
 ];
 

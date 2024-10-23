@@ -4,6 +4,8 @@ import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 import { sidebarStructure } from "./structur";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 interface SidebarProps {
   setExpand: (value: boolean) => void;
@@ -15,6 +17,7 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
   const profilePic =
     "https://img.mbiz.web.id/180x180/erp/R2p1IXoyVEpBMk01WOEAdaI3hHVlkuIg0wW5_pn-CJCKHSrA_n1-U1tfE7Bl5H4_4Z7AxgL0DPOmUCdPuCHHC5lWvMU5Ig3t1uDrkVN53MlWlnA";
   const link = "/";
+  const pathname = usePathname();
 
   const [openedMenu, setOpenedMenu] = useState<Record<string, any>>({});
   const [activeName, setActiveName] = useState("");
@@ -41,6 +44,22 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
 
   const handleNavigate = (path: string) => {
     setActiveName(path);
+  };
+  const handleLogout = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault(); // Prevent default link behavior
+    signOut({
+      redirect: true,
+      callbackUrl: `${window.location.origin}/login`,
+    });
+  };
+
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLAnchorElement>,
+    action: () => void
+  ) => {
+    if (event.code === "Space" || event.code === "Enter") {
+      action(); // Execute the action if key is Space or Enter
+    }
   };
 
   const handleToggle = (name: string) => {
@@ -184,23 +203,28 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
             role="button"
             tabIndex={0}
             id={item.id}
-            onClick={() => {
-              if ("child" in item) {
-                handleToggle(item.name);
-              } else if ("link" in item) {
+            onClick={(event) => {
+              if (item.name === "Logout") {
+                handleLogout(event); // Call logout function
+              } else if ("child" in item) {
+                handleToggle(item.name); // Assuming you have a handleToggle function
+              } else {
                 handleNavigate(item.name);
               }
             }}
-            onKeyDown={(event) => {
-              const { code } = event;
-              if (code === "Space") {
-                if ("child" in item) {
+            onKeyDown={(event) =>
+              handleKeyDown(event, () => {
+                if (item.name === "Logout") {
+                  handleLogout(
+                    event as unknown as React.MouseEvent<HTMLAnchorElement>
+                  );
+                } else if ("child" in item) {
                   handleToggle(item.name);
-                } else if ("link" in item) {
+                } else {
                   handleNavigate(item.name);
                 }
-              }
-            }}
+              })
+            }
             className={[
               "group m-0 flex cursor-pointer rounded-lg items-center justify-between h-12 py-0 pr-3 mb-1 focus:outline-none",
               recursive === 0 ? "pl-4" : recursive === 1 ? "pl-11" : "pl-16",
@@ -363,12 +387,34 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
               </a>
             </div>
 
-            <div className="mt-3 mb-10 p-0 text-white">
+            <div className="mt-3 p-0 text-white">
               <ul className="list-none text-lg font-normal px-3">
                 {sidebarStructure.map((item, index) =>
                   generateMenu(item, index)
                 )}
               </ul>
+              {/* <li>
+                <Link href="/logout" passHref legacyBehavior>
+                  <a
+                    role="button"
+                    tabIndex={0}
+                    onClick={handleLogout}
+                    onKeyDown={handleKeyDown}
+                    className={[
+                      "group mx-6 flex cursor-pointer rounded-lg items-center justify-between py-4 pr-3 focus:outline-none -mt-6",
+                      pathname === "/logout"
+                        ? "text-black font-semibold bg-white"
+                        : "text-white",
+                      "hover:bg-slate-300/20",
+                    ].join(" ")}
+                  >
+                    <div className="flex items-center text-lg">
+                      <div className="rounded-lg p-4 bg-white mr-5"></div>
+                      <div className="">Logout</div>
+                    </div>
+                  </a>
+                </Link>
+              </li> */}
             </div>
           </div>
         </SimpleBar>
