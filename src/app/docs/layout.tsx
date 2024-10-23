@@ -1,7 +1,5 @@
 import React from "react";
 import SidebarLink from "@/components/Docs/SidebarLink";
-import Lines from "@/components/Lines";
-import Footer from "@/components/Footer";
 
 export default function DocsLayout({
   children,
@@ -10,7 +8,7 @@ export default function DocsLayout({
 }) {
   return (
     <section
-      className="pb-16 pt-24 md:pb-20 md:pt-28 lg:pb-[400px] lg:pt-[200px]"
+      className="pb-16 pt-[130px] md:pb-20 md:pt-28 lg:pb-[400px] lg:pt-[200px]"
       id="docs"
     >
       <div className="container mx-auto">

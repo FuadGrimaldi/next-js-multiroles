@@ -50,18 +50,26 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
             </li>
             <li>
               <Link
-                href="/about"
+                href="/#features"
                 className="text-base hover:underline transition-all duration-500"
               >
-                About Us
+                Features
               </Link>
             </li>
             <li>
               <Link
-                href="#features"
+                href="/support"
                 className="text-base hover:underline transition-all duration-500"
               >
-                Features
+                Support
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/docs"
+                className="text-base hover:underline transition-all duration-500"
+              >
+                Docs
               </Link>
             </li>
             <li>
@@ -113,9 +121,9 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               <Link
-                href="#Features"
+                href="/#Features"
                 className={`text-xl hover:underline transition-all duration-500 ${
-                  pathName === "#Features" ? "text-[#10375C]" : "text-white"
+                  pathName === "/#Features" ? "text-[#10375C]" : "text-white"
                 }`}
               >
                 Features
