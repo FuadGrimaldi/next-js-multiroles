@@ -16,8 +16,9 @@ const DashboardPage = async () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-4xl font-semibold text-black mb-6">Dashboard</h1>
-      <p>Welcome, {session.user?.email}!</p> {/* Menampilkan email dari sesi */}
+      <h1 className="text-4xl font-semibold text-black mb-6">
+        Dashboard, {session.user?.email}
+      </h1>
       <Card /> {/* Menggunakan komponen Card */}
       <Card /> {/* Menggunakan komponen Card */}
       <Card /> {/* Menggunakan komponen Card */}

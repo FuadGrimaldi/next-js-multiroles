@@ -6,14 +6,16 @@ import { sidebarStructure } from "./structur";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import CardSideBar from "../Card/cardSideBar";
+import Image from "next/image";
 
 interface SidebarProps {
   setExpand: (value: boolean) => void;
 }
 
 const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
-  const username = "Miles Heizer";
-  const company = "Unilever";
+  const username = "Farmers";
+  const company = "Field";
   const profilePic =
     "https://img.mbiz.web.id/180x180/erp/R2p1IXoyVEpBMk01WOEAdaI3hHVlkuIg0wW5_pn-CJCKHSrA_n1-U1tfE7Bl5H4_4Z7AxgL0DPOmUCdPuCHHC5lWvMU5Ig3t1uDrkVN53MlWlnA";
   const link = "/";
@@ -354,7 +356,7 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
       >
         <SimpleBar style={{ height: "100%" }} autoHide>
           <div className="text-white">
-            <div className="my-8 flex flex-col items-center h-[250px] overflow-x-hidden">
+            <div className="my-8 flex flex-col items-center h-[200px] overflow-x-hidden">
               <a
                 href={link}
                 className={`text-center flex flex-col items-center justify-center`}
@@ -387,34 +389,34 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
               </a>
             </div>
 
-            <div className="mt-3 p-0 text-white">
+            <div className="p-0 text-white">
               <ul className="list-none text-lg font-normal px-3">
                 {sidebarStructure.map((item, index) =>
                   generateMenu(item, index)
                 )}
               </ul>
-              {/* <li>
-                <Link href="/logout" passHref legacyBehavior>
-                  <a
-                    role="button"
-                    tabIndex={0}
-                    onClick={handleLogout}
-                    onKeyDown={handleKeyDown}
-                    className={[
-                      "group mx-6 flex cursor-pointer rounded-lg items-center justify-between py-4 pr-3 focus:outline-none -mt-6",
-                      pathname === "/logout"
-                        ? "text-black font-semibold bg-white"
-                        : "text-white",
-                      "hover:bg-slate-300/20",
-                    ].join(" ")}
-                  >
-                    <div className="flex items-center text-lg">
-                      <div className="rounded-lg p-4 bg-white mr-5"></div>
-                      <div className="">Logout</div>
-                    </div>
-                  </a>
-                </Link>
-              </li> */}
+            </div>
+            <div
+              className={`duration-300 text-lg text-white truncate ${
+                isExpand ? "" : isExpandOnHover ? "" : "w-0 h-0 opacity-0"
+              }`}
+            >
+              <CardSideBar></CardSideBar>
+            </div>
+            <div
+              className={`duration-300 truncate ${
+                isExpand ? "" : isExpandOnHover ? "" : "w-0 h-0 opacity-0"
+              }`}
+            >
+              <div>
+                <Image
+                  src="/assets/logo2 2.png"
+                  alt="Logo"
+                  className="mt-[60px] mx-auto"
+                  width={190}
+                  height={190}
+                />
+              </div>
             </div>
           </div>
         </SimpleBar>
