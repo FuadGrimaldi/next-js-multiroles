@@ -1,5 +1,4 @@
 import React from "react";
-import FooterUser from "@/components/Footer/footerUser";
 import CardNoStatus from "@/components/Card/cardWithoutStatus";
 import { getServerSession } from "next-auth";
 import { authOptionts } from "../../api/auth/[...nextauth]/route";
@@ -21,7 +20,6 @@ const Report = async () => {
       <CardNoStatus /> {/* Menggunakan komponen Card */}
       <CardNoStatus /> {/* Menggunakan komponen Card */}
       <CardNoStatus /> {/* Menggunakan komponen Card */}
-      <FooterUser />
     </div>
   );
 };

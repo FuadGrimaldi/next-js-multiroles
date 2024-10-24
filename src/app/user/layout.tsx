@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Sidebar from "@/components/Sidebar/sidebar";
+import FooterUser from "@/components/Footer/footerUser";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [sideMenuIsExpanded, setSideMenuIsExpanded] = useState(true);
@@ -19,6 +20,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* Main content container */}
       <div className="flex-1 bg-gray-100 p-4 transition-all duration-300">
         <main>{children}</main>
+        <FooterUser />
       </div>
     </div>
   );

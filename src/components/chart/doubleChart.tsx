@@ -25,7 +25,7 @@ ChartJS.register(
   Legend
 );
 
-function Chart() {
+function DoubleChart() {
   const [temperatureData, setTemperatureData] = useState<number[]>([]);
   const [humidityData, setHumidityData] = useState<number[]>([]);
   const [labels, setLabels] = useState<string[]>([]);
@@ -122,7 +122,16 @@ function Chart() {
     },
   };
 
-  return <Line data={chartData} options={options} />;
+  return (
+    <div className="flex flex-col md:flex-row w-full">
+      <div className="h-full w-full md:w-1/2">
+        <Line data={chartData} options={options} />
+      </div>
+      <div className="h-full w-full md:w-1/2">
+        <Line data={chartData} options={options} />
+      </div>
+    </div>
+  );
 }
 
-export default Chart;
+export default DoubleChart;

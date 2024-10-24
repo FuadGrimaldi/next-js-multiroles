@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import SensorCard from "./cardIncube";
 import Chart from "@/components/chart";
+import DoubleChart from "../chart/doubleChart";
 
 function Card() {
   const [isOpen, setIsOpen] = useState(false); // Untuk mengontrol dropdown
@@ -46,7 +47,7 @@ function Card() {
       {isOpen && (
         <div className="p-4">
           {/* Chart component */}
-          <Chart />
+          <DoubleChart />
         </div>
       )}
     </div>
