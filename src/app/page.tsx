@@ -2,7 +2,9 @@
 import Feature from "@/components/Features";
 import FunFact from "@/components/FunFact";
 import Landingpage from "@/components/Hero/landingpage";
+import Integration from "@/components/Integration";
 import { useState, useEffect } from "react";
+import FAQ from "@/components/FAQ";
 
 export default function Home() {
   const [scrollTop, setScrollTop] = useState(0);
@@ -23,6 +25,8 @@ export default function Home() {
       <Landingpage></Landingpage>
       <Feature></Feature>
       <FunFact></FunFact>
+      <Integration></Integration>
+      <FAQ></FAQ>
     </main>
   );
 }

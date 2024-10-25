@@ -35,7 +35,7 @@ const SectionHeader = ({ headerInfo }: { headerInfo: HeaderInfo }) => {
       <h2 className="mx-auto mb-4 lg:text-5xl text-3xl font-bold text-black md:w-4/5 xl:w-1/2">
         {subtitle}
       </h2>
-      <p className="mx-auto md:w-4/5 lg:w-3/5 xl:w-[46%] text-black lg:text-2xl text-xl mb-2">
+      <p className="mx-auto md:w-4/5 lg:w-3/5 xl:w-[46%] text-black lg:text-xl text-lg mb-2">
         {description}
       </p>
     </motion.div>

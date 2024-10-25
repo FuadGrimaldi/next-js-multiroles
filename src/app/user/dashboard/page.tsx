@@ -18,7 +18,10 @@ const DashboardPage = async () => {
       <h1 className="text-4xl font-semibold text-black mb-6">
         Dashboard, {session.user?.name}
       </h1>
-      <Card /> {/* Menggunakan komponen Card */}
+      <div className="h-screen">
+        <Card /> {/* Menggunakan komponen Card */}
+        <Card /> {/* Menggunakan komponen Card */}
+      </div>
     </div>
   );
 };
