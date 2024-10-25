@@ -125,11 +125,7 @@ function Chart() {
     },
   };
 
-  return (
-    <div className=" h-[442px]">
-      <Line data={chartData} options={options} />
-    </div>
-  );
+  return <Line data={chartData} options={options} />;
 }
 
 export default Chart;

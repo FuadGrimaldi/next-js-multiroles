@@ -33,7 +33,7 @@ function CardNoStatus() {
             <div className="h-full w-full md:w-1/2">
               <Chart />
             </div>
-            <div className="md:w-1/2 pt-[50px]">
+            <div className="md:w-1/2 lg:pt-[50px]">
               <div className="p-6 space-y-4">
                 <h2 className="lg:text-3xl text-xl font-semibold lg:pl-[90px] pl-6 text-black">
                   Average
