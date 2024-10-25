@@ -1,28 +1,25 @@
 "use client";
-
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
+  LineElement,
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
-  Title,
-  Tooltip,
   Legend,
+  Title,
 } from "chart.js";
+import { getDatabase, ref, onValue } from "firebase/database";
+import app from "@/lib/firebase/init"; // Firebase initialization
 
-// Register scales and elements used by the chart
 ChartJS.register(
+  LineElement,
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
+  Legend,
+  Title
 );
 
 function Chart() {
@@ -30,45 +27,51 @@ function Chart() {
   const [humidityData, setHumidityData] = useState<number[]>([]);
   const [labels, setLabels] = useState<string[]>([]);
 
-  const fetchData = async () => {
-    try {
-      const temperatureResponse = await axios.get(
-        "http://127.0.0.1:8000/temperature"
-      );
-      const humidityResponse = await axios.get(
-        "http://127.0.0.1:8000/humidity"
-      );
-
-      // Assuming the response contains an array of data
-      const temperatureArray = temperatureResponse.data.Temperature;
-      const humidityArray = humidityResponse.data.Humidity;
-
-      console.log("Temperature Data:", temperatureArray);
-      console.log("Humidity Data:", humidityArray);
-
-      // Limit the data to the latest 50 entries
-      const limitedTemperature = temperatureArray.slice(-50);
-      const limitedHumidity = humidityArray.slice(-50);
-
-      // Store only the latest 50 data points
-      setTemperatureData(limitedTemperature);
-      setHumidityData(limitedHumidity);
-
-      // Create labels for the last 50 data points
-      const generatedLabels = limitedTemperature.map(
-        (_: number, index: number) => {
-          return `Time ${index + 1}`;
-        }
-      );
-
-      setLabels(generatedLabels);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   useEffect(() => {
-    fetchData(); // Fetch data once on mount
+    const db = getDatabase(app);
+    const tempRef = ref(db, "data/temperature");
+    const humidityRef = ref(db, "data/humidity");
+
+    // Fetch real-time temperature data
+    const unsubscribeTemp = onValue(tempRef, (snapshot) => {
+      const newTemperature = snapshot.val();
+      console.log("New temperature:", newTemperature);
+
+      const now = new Date();
+      const currentHour = now.getHours().toString().padStart(2, "0");
+      const currentMinute = now.getMinutes().toString().padStart(2, "0");
+      const currentSecond = now.getSeconds().toString().padStart(2, "0");
+
+      setTemperatureData((prevData) => {
+        const updatedData = [...prevData, newTemperature];
+        return updatedData.length > 60 ? updatedData.slice(1) : updatedData;
+      });
+
+      setLabels((prevLabels) => {
+        const newLabel = `${currentHour}:${currentMinute}:${currentSecond}`;
+        const updatedLabels = [...prevLabels, newLabel];
+        return updatedLabels.length > 60
+          ? updatedLabels.slice(1)
+          : updatedLabels;
+      });
+    });
+
+    // Fetch real-time humidity data
+    const unsubscribeHumidity = onValue(humidityRef, (snapshot) => {
+      const newHumidity = snapshot.val();
+      console.log("New humidity:", newHumidity);
+
+      setHumidityData((prevData) => {
+        const updatedData = [...prevData, newHumidity];
+        return updatedData.length > 60 ? updatedData.slice(1) : updatedData;
+      });
+    });
+
+    // Cleanup listeners
+    return () => {
+      unsubscribeTemp();
+      unsubscribeHumidity();
+    };
   }, []);
 
   const chartData = {
@@ -101,7 +104,7 @@ function Chart() {
       },
       title: {
         display: true,
-        text: "Incubator Temperature and Humidity (Last 50 Data Points)",
+        text: "Real-time Incubator Temperature and Humidity",
       },
     },
     scales: {
@@ -116,13 +119,17 @@ function Chart() {
       x: {
         title: {
           display: true,
-          text: "Index",
+          text: "Time (HH:MM:SS)",
         },
       },
     },
   };
 
-  return <Line data={chartData} options={options} />;
+  return (
+    <div className=" h-[442px]">
+      <Line data={chartData} options={options} />
+    </div>
+  );
 }
 
 export default Chart;

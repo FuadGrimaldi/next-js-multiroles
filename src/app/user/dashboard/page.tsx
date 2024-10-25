@@ -19,8 +19,6 @@ const DashboardPage = async () => {
         Dashboard, {session.user?.name}
       </h1>
       <Card /> {/* Menggunakan komponen Card */}
-      <Card /> {/* Menggunakan komponen Card */}
-      <Card /> {/* Menggunakan komponen Card */}
     </div>
   );
 };
