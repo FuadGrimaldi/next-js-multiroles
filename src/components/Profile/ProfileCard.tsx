@@ -9,8 +9,8 @@ type ProfileCardProps = {
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ name, location, phone }) => {
   return (
-    <div className="flex flex-col items-center bg-gray-200">
-      <div className="rounded-lg border border-gray-200 p-6 shadow-md w-full bg-white lg:mx-[180px] mx-0 lg:pb-[100px] pb-0">
+    <div className="flex flex-col items-center lg:w-auto w-full">
+      <div className="rounded-lg border border-gray-200 p-6 lg:mx-[175px] mx-0 shadow-md lg:pb-[100px] pb-0 max-w-[1000px] w-full">
         {/* Header section with "Your Profile" text and icon aligned to the corners */}
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold text-black">Your Profile</h3>

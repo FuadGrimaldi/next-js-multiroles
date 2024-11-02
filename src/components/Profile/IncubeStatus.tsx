@@ -8,7 +8,7 @@ type InCubeStatusProps = {
 
 const InCubeStatus: React.FC<InCubeStatusProps> = ({ title, value }) => {
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 w-40 text-center text-black">
+    <div className="rounded-lg shadow-lg px-[100px] py-5 bg-white text-center text-black w-full lg:w-auto">
       <p className="font-semibold">InCube Active</p>
       <h2 className="text-2xl font-bold">
         {value} {title}
