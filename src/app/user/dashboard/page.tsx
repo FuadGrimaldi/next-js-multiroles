@@ -1,14 +1,15 @@
+// File: /pages/dashboard.tsx
 import React from "react";
-import Card from "@/components/Card"; // Mengimpor komponen Card
+import Card from "@/components/Card";
 import { getServerSession } from "next-auth";
-import { authOptionts } from "../../api/auth/[...nextauth]/route";
+import { authOptions } from "../../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 
 const DashboardPage = async () => {
-  const session = await getServerSession(authOptionts);
+  const session = await getServerSession(authOptions);
+  console.log(session);
 
   if (!session) {
-    // Redirect jika sesi tidak ditemukan
     redirect("/login");
     return null;
   }
@@ -16,11 +17,11 @@ const DashboardPage = async () => {
   return (
     <div className="p-6">
       <h1 className="text-4xl font-semibold text-black mb-6">
-        Dashboard, {session.user?.name}
+        Dashboard, {session.user?.name || "User"}
       </h1>
       <div className="h-max-screen">
-        <Card /> {/* Menggunakan komponen Card */}
-        <Card /> {/* Menggunakan komponen Card */}
+        <Card />
+        <Card />
       </div>
     </div>
   );

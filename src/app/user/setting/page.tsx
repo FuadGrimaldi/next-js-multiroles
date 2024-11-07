@@ -4,11 +4,11 @@ import ProfileCard from "@/components/Profile/ProfileCard";
 import AddressForm from "@/components/Profile/AddressForm";
 import InCubeStatus from "@/components/Profile/IncubeStatus";
 import { getServerSession } from "next-auth";
-import { authOptionts } from "../../api/auth/[...nextauth]/route";
+import { authOptions } from "../../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 
 const ProfilePage: React.FC = async () => {
-  const session = await getServerSession(authOptionts);
+  const session = await getServerSession(authOptions);
 
   if (!session) {
     // Redirect jika sesi tidak ditemukan
