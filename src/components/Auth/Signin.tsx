@@ -6,6 +6,7 @@ import { useState, SyntheticEvent } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation"; // untuk melakukan redirect
 import { signIn } from "next-auth/react";
+import Swal from "sweetalert2";
 
 const Signin = () => {
   const [data, setData] = useState({
@@ -32,12 +33,31 @@ const Signin = () => {
       });
 
       if (response.status === 200) {
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: "Login Success",
+          showConfirmButton: false,
+          timer: 1500,
+        });
         router.push("/user/dashboard"); // arahkan ke dashboard setelah login berhasil
       } else {
-        setError("Login gagal. Silakan coba lagi.");
+        Swal.fire({
+          position: "top",
+          icon: "error",
+          title: "Login failed please try again",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     } catch (error) {
-      setError("Login gagal. Silakan coba lagi.");
+      Swal.fire({
+        position: "top",
+        icon: "error",
+        title: "Login failed please try again",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     } finally {
       setIsLoading(false);
     }

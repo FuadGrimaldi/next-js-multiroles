@@ -2,15 +2,93 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import React, { SyntheticEvent, useEffect, useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
+
+// or via CommonJS
 
 const Signup = () => {
+  const router = useRouter();
   const [data, setData] = useState({
     email: "",
     password: "",
     username: "",
   });
+  const [isloading, setIsloading] = useState(false);
+  const [error, setError] = useState("");
+  const [alert, setAlert] = useState(false);
 
+  const handleSubmit = async (e: SyntheticEvent) => {
+    e.preventDefault();
+    setError("");
+    setIsloading(true);
+    try {
+      const response = await axios.post("/api/register", {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      });
+
+      if (response.status === 201 || response.status === 200) {
+        if (response.data.status === false) {
+          Swal.fire({
+            position: "top",
+            icon: "error",
+            title: "Email Already Registered",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        } else {
+          Swal.fire({
+            position: "top",
+            icon: "success",
+            title: "Registration Success",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          router.push("/login");
+        }
+      } else {
+        setAlert(true);
+        setError("Gagal mendaftar. Silakan coba lagi.");
+      }
+    } catch (error) {
+      setError("Gagal mendaftar. Silakan coba lagi.");
+    } finally {
+      setIsloading(false);
+    }
+  };
+
+  const validateField = ({ name, value }: any) => {
+    switch (name) {
+      case "username":
+        if (value.length < 3 || value.length > 20)
+          return "Username must be 3-20 characters long.";
+        if (!/^[a-zA-Z0-9]+$/.test(value))
+          return "Username can only contain letters and numbers.";
+        break;
+      case "email":
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+          return "Invalid email format.";
+        break;
+      case "password":
+        if (value.length < 8 || value.length > 20)
+          return "Password must be 8-20 characters long.";
+        break;
+      default:
+        return "";
+    }
+    return "";
+  };
+
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    const validationError = validateField({ name, value });
+    setData((prev) => ({ ...prev, [name]: value }));
+    setError(validationError); // Set single error message for field
+  };
   return (
     <>
       {/* <!-- ===== SignUp Form Start ===== --> */}
@@ -119,18 +197,16 @@ const Signup = () => {
               </span>
             </div>
 
-            <form className="flex flex-col">
+            <form onSubmit={handleSubmit} className="flex flex-col">
               <div className="mb-6">
                 <label className="mb-2 block text-lg text-black lg:text-xl">
                   Username
                 </label>
                 <input
-                  type="username"
+                  type="text"
                   name="username"
                   value={data.username}
-                  onChange={(e) =>
-                    setData({ ...data, username: e.target.value })
-                  }
+                  onChange={handleChange}
                   placeholder="FuadGrimaldi"
                   className="w-full rounded border bg-[#f8f8f8] border-stroke  py-3 px-5 text-black outline-none transition-all focus:border-primary focus:bg-white focus:shadow-input text-base"
                 />
@@ -143,7 +219,7 @@ const Signup = () => {
                   type="email"
                   name="email"
                   value={data.email}
-                  onChange={(e) => setData({ ...data, email: e.target.value })}
+                  onChange={handleChange}
                   placeholder="example@domain.com"
                   className="w-full rounded border bg-[#f8f8f8] border-stroke  py-3 px-5 text-black outline-none transition-all focus:border-primary focus:bg-white focus:shadow-input text-base"
                 />
@@ -157,9 +233,7 @@ const Signup = () => {
                   type="password"
                   name="password"
                   value={data.password}
-                  onChange={(e) =>
-                    setData({ ...data, password: e.target.value })
-                  }
+                  onChange={handleChange}
                   placeholder="************"
                   className="w-full rounded border border-stroke bg-[#f8f8f8] py-3 px-5 text-black outline-none transition-all focus:border-primary focus:bg-white focus:shadow-input"
                 />
@@ -176,14 +250,17 @@ const Signup = () => {
                     Remember me
                   </label>
                 </div>
+                {error && <span className="text-red-500 text-sm">{error}</span>}
               </div>
 
               <div className="mb-5">
                 <button
+                  type="submit"
                   aria-label="Sign In"
                   className="w-full rounded-sm bg-[#10375C] hover:text-[#F3C623] transition-all duration-500 py-3 px-5 font-medium lg:text-xl text-lg"
+                  disabled={isloading}
                 >
-                  Registrasi
+                  {isloading ? "Loading..." : "Registrasi"}
                 </button>
               </div>
             </form>
