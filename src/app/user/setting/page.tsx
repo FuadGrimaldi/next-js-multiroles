@@ -10,6 +10,10 @@ import { redirect } from "next/navigation";
 const ProfilePage: React.FC = async () => {
   const session = await getServerSession(authOptions);
 
+  // console.log(session?.user.);
+
+  // const userId = session?.user.;
+
   if (!session) {
     // Redirect jika sesi tidak ditemukan
     redirect("/login");

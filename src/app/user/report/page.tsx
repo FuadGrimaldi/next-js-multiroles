@@ -17,7 +17,6 @@ const Report = async () => {
       <h1 className="text-4xl font-semibold text-black mb-6">Report</h1>
       <div className="h-max-screen">
         <CardNoStatus /> {/* Menggunakan komponen Card */}
-        <CardNoStatus /> {/* Menggunakan komponen Card */}
       </div>
     </div>
   );

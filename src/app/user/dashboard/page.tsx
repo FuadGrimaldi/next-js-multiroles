@@ -1,13 +1,13 @@
 // File: /pages/dashboard.tsx
 import React from "react";
 import Card from "@/components/Card";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 
 const DashboardPage = async () => {
   const session = await getServerSession(authOptions);
-  console.log(session);
+  console.log(session?.user.id);
 
   if (!session) {
     redirect("/login");
