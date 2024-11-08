@@ -1,4 +1,3 @@
-// File: /api/auth/[...nextauth]/route.ts
 import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -12,7 +11,8 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      type: "credentials",
+      name: "credentials",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
@@ -23,29 +23,38 @@ export const authOptions: NextAuthOptions = {
           password: string;
         };
         const user: any = await login({ email, password });
-        if (user && (await compare(password, user.password))) {
-          return { name: user.name, id: user.id, email: user.email }; // Return user object with id and email
+        if (user) {
+          const passwordConfirm = await compare(password, user.password);
+          if (passwordConfirm) {
+            return user;
+          }
+          return null;
+        } else {
+          return null;
         }
-        return null;
       },
     }),
   ],
+
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.name = user.name;
-        token.id = user.id;
-        token.email = user.email;
+        return {
+          ...token,
+          email: user.email,
+          id: user.id,
+        };
       }
       return token;
     },
-    async session({ session, token }: any) {
-      if (token) {
-        session.user.name = token.name;
-        session.user.id = token.id;
-        session.user.email = token.email;
-      }
-      return session;
+    async session({ session, user, token }) {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id,
+        },
+      };
     },
   },
   pages: {
