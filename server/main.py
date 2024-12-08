@@ -1,17 +1,7 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from flask import Flask, jsonify
 import mysql.connector
 
-app = FastAPI()
-
-# Tambahkan middleware CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Ganti "*" dengan domain spesifik jika perlu
-    allow_credentials=True,
-    allow_methods=["*"],  # Ganti dengan metode spesifik jika perlu
-    allow_headers=["*"],  # Ganti dengan header spesifik jika perlu
-)
+app = Flask(__name__)
 
 mydb = None
 
@@ -26,32 +16,35 @@ def init_db_connection():
         )
     return mydb
 
-@app.get("/")
+@app.route("/")
 def read_root():
-    return {"Hello": "World"}
+    return jsonify({"Hello": "World"})
 
-@app.get("/humidity")
+@app.route("/humidity", methods=["GET"])
 def get_hum():
     mydb = init_db_connection()
     cursor = mydb.cursor()
     try:
         cursor.execute("SELECT humid FROM tb_cuaca")
         result = cursor.fetchall()
-        return {"Humidity": [row[0] for row in result]}
+        return jsonify({"Humidity": [row[0] for row in result]})
     except mysql.connector.Error as e:
-        return {"error": str(e)}
+        return jsonify({"error": str(e)})
     finally:
         cursor.close()
 
-@app.get("/temperature")
+@app.route("/temperature", methods=["GET"])
 def get_temp():
     mydb = init_db_connection()
     cursor = mydb.cursor()
     try:
         cursor.execute("SELECT suhu FROM tb_cuaca")
         result = cursor.fetchall()
-        return {"Temperature": [row[0] for row in result]}
+        return jsonify({"Temperature": [row[0] for row in result]})
     except mysql.connector.Error as e:
-        return {"error": str(e)}
+        return jsonify({"error": str(e)})
     finally:
         cursor.close()
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
