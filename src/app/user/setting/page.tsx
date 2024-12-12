@@ -9,11 +9,6 @@ import { redirect } from "next/navigation";
 
 const ProfilePage: React.FC = async () => {
   const session = await getServerSession(authOptions);
-
-  // console.log(session?.user.);
-
-  // const userId = session?.user.;
-
   if (!session) {
     // Redirect jika sesi tidak ditemukan
     redirect("/login");
@@ -22,15 +17,15 @@ const ProfilePage: React.FC = async () => {
   return (
     <div className="p-6">
       <div className="h-max-screen space-y-8">
-        <div className="flex flex-wrap gap-6 lg:ml-[97px] ml-0">
+        <div className="flex flex-wrap gap-6 lg:pl-[97px] ml-0">
           <InCubeStatus title="Active" value={2} />
           <InCubeStatus title="Days left" value={2} />
         </div>
-        <div className="flex flex-wrap gap-6 w-full lg:ml-[97px] ml-0 mx-auto">
+        <div className="flex flex-wrap gap-6 w-full lg:pl-[97px] ml-0 mx-auto">
           <ProfileCard
             name={session.user?.name ?? "User"}
-            location="Bandung, Indonesia"
-            phone="+62 8515 6931 813"
+            location={session.user?.email ?? "Email"}
+            phone={session.user?.telp}
           />
           <AddressForm />
         </div>

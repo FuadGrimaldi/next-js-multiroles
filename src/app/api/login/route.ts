@@ -18,7 +18,7 @@ export const POST = async (request: Request) => {
 
     // Jika email dan kata sandi cocok, simpan userId dalam cookie
     const response = NextResponse.json(
-      { message: "Login berhasil.", data: user },
+      { message: "Login berhasil.", data: user.id },
       { status: 200 }
     );
 
