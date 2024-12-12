@@ -32,7 +32,11 @@ const Signin = () => {
         password: data.password,
       });
 
-      if (response.status === 200) {
+      if (response.status === 200 && response.data) {
+        const userId = response.data.data;
+        console.log("ini di singin ", userId);
+
+        localStorage.setItem("id", userId);
         Swal.fire({
           position: "top",
           icon: "success",

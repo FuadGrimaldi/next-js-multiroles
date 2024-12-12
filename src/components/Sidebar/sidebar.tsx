@@ -48,6 +48,7 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
     setActiveName(path);
   };
   const handleLogout = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    localStorage.removeItem("id");
     event.preventDefault(); // Prevent default link behavior
     signOut({
       redirect: true,
