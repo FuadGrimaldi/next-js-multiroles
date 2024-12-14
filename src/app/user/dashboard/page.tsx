@@ -21,7 +21,7 @@ const DashboardPage = async () => {
       </h1>
       <div className="h-max-screen">
         <Card />
-        <Card />
+        {/* <Card /> */}
       </div>
     </div>
   );

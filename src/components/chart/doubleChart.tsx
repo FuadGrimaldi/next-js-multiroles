@@ -152,7 +152,7 @@ function DoubleChart() {
           text: "Humidity (%)",
         },
         min: 40, // Minimum humidity
-        max: 90, // Maximum humidity
+        max: 120, // Maximum humidity
       },
       x: {
         title: {
