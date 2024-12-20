@@ -23,7 +23,7 @@ const SensorCard: React.FC<SensorCardProps> = ({
           {format}
         </p>
       </div>
-      <div className="flex items-center justify-center bg-yellow-400 rounded-full h-12 w-12">
+      <div className="flex items-center justify-center bg-yellow-400 rounded-full lg:h-12 h-8 lg:w-12 w-8">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

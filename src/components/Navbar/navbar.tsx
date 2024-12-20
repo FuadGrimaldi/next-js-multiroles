@@ -9,8 +9,8 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
     <motion.div
       className={
         scrollTop < 50
-          ? `navbar bg-transparent max-w-screen w-full flex fixed top-0 left-0 right-0 z-50 justify-between items-center px-6 lg:px-[120px] py-4 transition-colors duration-200`
-          : `navbar bg-[#ffb800] max-w-screen w-full flex fixed top-0 left-0 right-0 z-50 justify-between items-center px-6 lg:px-[120px] py-4 transition-colors duration-500`
+          ? `navbar bg-transparent max-w-screen w-full flex fixed top-0 left-0 right-0 z-50 justify-between items-center px-2 lg:px-[120px] py-4 transition-colors duration-200`
+          : `navbar bg-[#ffb800] max-w-screen w-full flex fixed top-0 left-0 right-0 z-50 justify-between items-center px-2 lg:px-[120px] py-4 transition-colors duration-500`
       }
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
@@ -86,7 +86,7 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
           <motion.img
             src="/assets/logo2 2.png"
             alt="Logo"
-            className="lg:h-20 md:h-14 h-12"
+            className="lg:h-20 md:h-14 h-10"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}

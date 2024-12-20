@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 const Landingpage = () => {
   return (
     <motion.div
-      className="lg:max-w-screen pt-[500px] lg:py-[250px] px-[120px]"
+      className="lg:max-w-screen pt-[500px] lg:py-[250px] lg:px-[100px] px-[80px]"
       id="LandingPage"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -24,7 +24,7 @@ const Landingpage = () => {
         <div className="mx-auto">
           <div className="grid grid-cols-1 gap-y-8 lg:items-center lg:grid-cols-2 sm:gap-y-20 xl:grid-cols-5">
             <motion.div
-              className="text-center xl:col-span-2 lg:text-left md:px-16 lg:px-0"
+              className="text-center xl:col-span-2 lg:text-left md:px-0 lg:px-0"
               initial={{ x: -50, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 1 }}

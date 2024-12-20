@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* Sidebar container */}
       <div
         className={`${
-          sideMenuIsExpanded ? "w-[290px]" : "w-20" // Control width of the sidebar
+          sideMenuIsExpanded ? "w-[200px]" : "w-20" // Control width of the sidebar
         } transition-all duration-300 bg-[#ffb800]`}
       >
         <Sidebar setExpand={setSideMenuIsExpanded} />

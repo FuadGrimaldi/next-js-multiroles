@@ -229,8 +229,8 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
               })
             }
             className={[
-              "group m-0 flex cursor-pointer rounded-lg items-center justify-between h-12 py-0 pr-3 mb-1 focus:outline-none",
-              recursive === 0 ? "pl-4" : recursive === 1 ? "pl-11" : "pl-16",
+              "group m-0 flex cursor-pointer rounded-lg justify-between h-12 py-0 mb-1 focus:outline-none",
+              recursive === 0 ? "pl-2" : recursive === 1 ? "pl-11" : "pl-16",
               activeName === item.name || activeName.split(".")[0] === item.name
                 ? `text-black font-semibold ${
                     item.parent ? "text-black bg-white" : "bg-transparent"
@@ -317,13 +317,13 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
       role="navigation"
       id="sidebar"
       className={[
-        "border-r border-slate-100 shadow-sm absolute inset-y-0 left-0",
+        "border-r border-slate-100 shadow-sm fixed inset-y-0 left-0 h-screen z-50",
         "duration-300 ease-in-out md:fixed md:translate-x-0",
         `${
           isExpand
             ? "bg-slate-50 w-72"
             : isExpandOnHover
-            ? "bg-slate-50/70 w-72 backdrop-blur-md"
+            ? "bg-slate-50 w-72"
             : "bg-slate-50 w-20"
         }`,
       ].join(" ")}

@@ -140,7 +140,7 @@ function CardNoStatus() {
           {/* Chart component */}
           <div className="flex flex-col md:flex-row w-full">
             <div className="h-full w-full md:w-1/2">
-              <Chart />
+              <ChartWeekly />
             </div>
             <div className="md:w-1/2 lg:pt-[50px]">
               <div className="p-6 space-y-4">
@@ -179,6 +179,9 @@ function CardNoStatus() {
               </div>
             </div>
           </div>
+          {/* <div className="">
+            <ChartWeekly></ChartWeekly>
+          </div> */}
         </div>
       )}
     </div>
