@@ -125,7 +125,7 @@ function Chart() {
     },
   };
 
-  return <Line data={chartData} options={options} />;
+  return <Line data={chartData} options={options as any} />;
 }
 
 export default Chart;

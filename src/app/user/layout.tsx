@@ -18,7 +18,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Main content container */}
-      <div className="flex-1 bg-gray-100 p-4 transition-all duration-300">
+      <div className="flex-1 bg-gray-100 transition-all duration-300">
         <main>{children}</main>
         <FooterUser />
       </div>

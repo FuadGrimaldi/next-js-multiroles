@@ -8,7 +8,7 @@ interface SensorCardProps {
 
 const SensorCard: React.FC<SensorCardProps> = ({
   format = "",
-  sensor = 0,
+  sensor = 0 || "",
   type = "",
 }) => {
   // Jika `type` tidak disediakan, jangan tampilkan komponen
@@ -18,7 +18,7 @@ const SensorCard: React.FC<SensorCardProps> = ({
     <div className="flex items-center justify-between bg-gray-200 rounded-lg shadow-md px-6 py-4">
       <div className="mr-5">
         <p className="text-sm text-gray-500">{type}</p>
-        <p className="text-2xl font-bold text-gray-900">
+        <p className="lg:text-2xl text-lg font-bold text-gray-900">
           {sensor}
           {format}
         </p>

@@ -15,10 +15,17 @@ function CardNoStatus() {
   const [isOpen, setIsOpen] = useState(false); // Untuk mengontrol dropdown
   const [temp, setTemp] = useState<number | null>(null);
   const [humid, setHumid] = useState<number | null>(null);
-  const [tempData, setTempData] = useState<number[]>([]);
-  const [humidData, setHumidData] = useState<number[]>([]);
+  const [tempData, setTempData] = useState<number[]>(() => {
+    const savedData = localStorage.getItem("tempData");
+    return savedData ? JSON.parse(savedData) : [];
+  });
+  const [humidData, setHumidData] = useState<number[]>(() => {
+    const savedData = localStorage.getItem("humidData");
+    return savedData ? JSON.parse(savedData) : [];
+  });
   const [weeklyTempAvg, setWeeklyTempAvg] = useState<number | null>(null);
   const [weeklyHumidAvg, setWeeklyHumidAvg] = useState<number | null>(null);
+  const [labels, setLabels] = useState<string[]>([]);
   const [client, setClient] = useState<ClientType | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [openAll, setOpenAll] = useState(false);
@@ -66,14 +73,14 @@ function CardNoStatus() {
     const payload = parseFloat(message.payloadString);
     const topic = message.destinationName;
 
-    if (topic === "MirsabAnwar/Temp") {
+    if (topic === "inCube/Temp") {
       setTemp(payload);
       setTempData((prevData) => {
         const newData = [...prevData, payload].slice(-7); // Menyimpan data harian untuk 7 hari
         localStorage.setItem("tempData", JSON.stringify(newData)); // Simpan di localStorage
         return newData;
       });
-    } else if (topic === "MirsabAnwar/Humid") {
+    } else if (topic === "inCube/Humid") {
       setHumid(payload);
       setHumidData((prevData) => {
         const newData = [...prevData, payload].slice(-7);
@@ -97,8 +104,8 @@ function CardNoStatus() {
 
   useEffect(() => {
     if (client && isConnected) {
-      subscribeToTopic("MirsabAnwar/Temp");
-      subscribeToTopic("MirsabAnwar/Humid");
+      subscribeToTopic("inCube/Temp");
+      subscribeToTopic("inCube/Humid");
     }
   }, [client, isConnected]);
 
@@ -114,6 +121,15 @@ function CardNoStatus() {
         humidData.reduce((acc, curr) => acc + curr, 0) / humidData.length;
       setWeeklyHumidAvg(humidAvg);
     }
+    const now = new Date();
+    const currentHour = now.getHours().toString().padStart(2, "0");
+    const currentMinute = now.getMinutes().toString().padStart(2, "0");
+    const currentSecond = now.getSeconds().toString().padStart(2, "0");
+    setLabels((prevLabels) => {
+      const newLabel = `${currentHour}:${currentMinute}:${currentSecond}`;
+      const updatedLabels = [...prevLabels, newLabel];
+      return updatedLabels.length > 60 ? updatedLabels.slice(1) : updatedLabels;
+    });
   }, [tempData, humidData]);
 
   const toggleDropdown = () => {
@@ -124,7 +140,7 @@ function CardNoStatus() {
     <div className="w-full border rounded-lg shadow-lg mb-4">
       <div className="flex justify-between items-center p-6 bg-gray-100 border-b">
         <div>
-          <h2 className="lg:text-3xl text-2xl font-semibold text-black">
+          <h2 className="lg:text-3xl text-xl font-semibold text-black">
             inCube #1
           </h2>
         </div>
@@ -139,12 +155,15 @@ function CardNoStatus() {
         <div className="p-4">
           {/* Chart component */}
           <div className="flex flex-col md:flex-row w-full">
-            <div className="h-full w-full md:w-1/2">
-              <ChartWeekly />
-            </div>
+            <ChartWeekly
+              temperatureData={tempData}
+              humidityData={humidData}
+              labels={labels}
+            />
+
             <div className="md:w-1/2 lg:pt-[50px]">
-              <div className="p-6 space-y-4">
-                <h2 className="lg:text-3xl text-xl font-semibold lg:pl-[90px] pl-6 text-black">
+              <div className="space-y-4">
+                <h2 className="lg:text-3xl text-xl font-semibold lg:pl-[90px] px-2 text-black">
                   Average
                 </h2>
                 <div className="grid grid-cols-2">
@@ -167,7 +186,7 @@ function CardNoStatus() {
                     />
                   </div>
                 </div>
-                <h2 className="lg:text-3xl text-xl font-semibold mt-6 lg:pl-[90px] pl-6 text-black">
+                <h2 className="lg:text-3xl text-xl font-semibold mt-6 lg:pl-[90px] px-2 text-black">
                   Eggs
                 </h2>
                 <div className="grid grid-cols-2">
