@@ -148,11 +148,11 @@ function Card() {
 
   const isDangerous =
     (temp !== null &&
-      temp[0] >= 50 &&
+      temp[temp.length - 1] >= 50 &&
       humid !== null &&
-      humid[0] < 30 && // Akses elemen pertama dari array
-      gas[0] !== null &&
-      gas[0] > 1400) ||
+      humid[humid.length - 1] < 30 && // Akses elemen pertama dari array
+      gas !== null &&
+      gas[gas.length - 1] > 1400) ||
     statusFlame === "DETECTED";
 
   return (

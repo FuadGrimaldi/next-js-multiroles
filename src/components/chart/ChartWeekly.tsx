@@ -24,22 +24,30 @@ ChartJS.register(
 type DoubleChartProps = {
   temperatureData: number[];
   humidityData: number[];
+  gasData: number[];
   labels: string[];
+  limitData: number;
+  Type: string;
 };
 
-function Chart({ temperatureData, humidityData, labels }: DoubleChartProps) {
-  console.log("Temperature Data:", temperatureData);
-  console.log("Humidity Data:", humidityData);
-  console.log("Labels:", labels);
-  const last10TemperatureData = temperatureData.slice(-10);
-  const last10HumidityData = humidityData.slice(-10);
-  const last10Labels = labels.slice(-10);
+function Chart({
+  temperatureData,
+  humidityData,
+  gasData,
+  labels,
+  Type,
+  limitData,
+}: DoubleChartProps) {
+  const lastTemperatureData = temperatureData.slice(-{ limitData });
+  const lastHumidityData = humidityData.slice(-{ limitData });
+  const lastGasData = gasData.slice(-{ limitData });
+  const lastLabels = labels.slice(-{ limitData });
   const chartData = {
-    labels: last10Labels,
+    labels: lastLabels,
     datasets: [
       {
         label: "Temperature (°C)",
-        data: last10TemperatureData,
+        data: lastTemperatureData,
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.5)",
         fill: true,
@@ -47,9 +55,17 @@ function Chart({ temperatureData, humidityData, labels }: DoubleChartProps) {
       },
       {
         label: "Humidity (%)",
-        data: last10HumidityData,
+        data: lastHumidityData,
         borderColor: "rgba(255, 99, 132, 1)",
         backgroundColor: "rgba(255, 99, 132, 0.5)",
+        fill: true,
+        tension: 0.4,
+      },
+      {
+        label: "Gas (ppm)",
+        data: gasData,
+        borderColor: "rgb(182, 99, 255)",
+        backgroundColor: "rgba(45, 3, 79, 0.5)",
         fill: true,
         tension: 0.4,
       },
@@ -65,7 +81,7 @@ function Chart({ temperatureData, humidityData, labels }: DoubleChartProps) {
       },
       title: {
         display: true,
-        text: "Average One Hour Temperature and Humidity",
+        text: Type,
       },
     },
     scales: {

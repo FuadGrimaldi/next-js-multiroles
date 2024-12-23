@@ -11,7 +11,7 @@ const InfoCard = ({
   value: string | number;
 }) => {
   return (
-    <div className="lg:h-24 h-[80px] lg:mx-[90px] mx-2 shadow-md rounded-lg overflow-hidden">
+    <div className="lg:h-24 h-[80px] lg:mx-[60px] mx-2 shadow-md rounded-lg overflow-hidden">
       <div className="p-2" style={{ backgroundColor: color }}>
         <h3 className="text-white lg:text-lg text-sm font-semibold">{title}</h3>
       </div>

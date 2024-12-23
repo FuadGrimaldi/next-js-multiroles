@@ -102,7 +102,7 @@ function DoubleChart({
           text: "Temperature (°C)",
         },
         min: 15, // Minimum temperature
-        max: 50, // Maximum temperature
+        max: 60, // Maximum temperature
       },
       x: {
         title: {
@@ -132,7 +132,7 @@ function DoubleChart({
           display: true,
           text: "Humidity (%)",
         },
-        min: 40, // Minimum humidity
+        min: 0, // Minimum humidity
         max: 120, // Maximum humidity
       },
       x: {
