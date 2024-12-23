@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAllSensorData } from "../../../../lib/prisma-service/service";
+import { getAllSensorData } from "../../../../lib/prisma-service/sensorService";
 
 export async function GET() {
   try {

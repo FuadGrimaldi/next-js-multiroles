@@ -7,7 +7,6 @@ const prisma = new PrismaClient();
 export const POST = async (request: Request) => {
   try {
     const body = await request.json();
-    console.log(body);
 
     const { email, password } = body;
 
