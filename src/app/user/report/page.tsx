@@ -3,6 +3,13 @@ import CardNoStatus from "@/components/Card/cardWithoutStatus";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Report Incube",
+  description: "Collect Your Report",
+  // other metadata
+};
 
 const Report = async () => {
   const session = await getServerSession(authOptions);

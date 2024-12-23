@@ -112,3 +112,25 @@ body {
 .font-montserrat {
   font-family: "Monserrat", sans-serif;
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  color: black; /* Ubah warna ikon */
+  filter: invert(1); /* Untuk memastikan warna berubah menjadi hitam */
+  opacity: 1; /* Pastikan ikon terlihat */
+}
+
+.custom-swal {
+  font-family: "Arial", sans-serif; /* Ubah font secara keseluruhan */
+}
+
+.custom-swal-title {
+  font-family: "Roboto", sans-serif; /* Font untuk judul */
+  font-size: 20px; /* Ukuran font untuk judul */
+  font-weight: bold; /* Tebal font */
+}
+
+.custom-swal-icon {
+  font-size: 8px; /* Font pada icon */
+  height: 50px;
+  width: 50px;
+}

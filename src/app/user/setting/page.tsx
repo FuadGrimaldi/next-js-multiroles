@@ -6,6 +6,13 @@ import InCubeStatus from "@/components/Profile/IncubeStatus";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Profile Incube",
+  description: "User information",
+  // other metadata
+};
 
 const ProfilePage: React.FC = async () => {
   const session = await getServerSession(authOptions);
@@ -23,9 +30,8 @@ const ProfilePage: React.FC = async () => {
         </div>
         <div className="flex flex-wrap gap-6 w-full lg:pl-[97px] ml-0 mx-auto">
           <ProfileCard
-            name={session.user?.name ?? "User"}
+            name={session.user?.username ?? "User"}
             location={session.user?.email ?? "Email"}
-            phone={session.user?.telp}
           />
           <AddressForm />
         </div>

@@ -33,8 +33,8 @@ const Signin = () => {
       });
 
       if (response.status === 200 && response.data) {
-        const userId = response.data.data;
-        console.log("ini di singin ", userId);
+        const userId = response.data.user.id;
+        // console.log("ini di singin ", userId);
 
         localStorage.setItem("id", userId);
         Swal.fire({

@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model address {
+  id        Int    @id @default(autoincrement())
+  id_user   String @unique(map: "id_user") @default("0") @db.VarChar(50)
+  Kecamatan String @default("0") @db.VarChar(50)
+}
+
+model data_produk {
+  id        Int               @id @default(autoincrement())
+  id_produk String            @db.VarChar(255)
+  suhu      Float             @default(0) @db.Float
+  humid     Float             @default(0) @db.Float
+  gas       Float             @default(0) @db.Float
+  lampu     data_produk_lampu @default(OFF)
+  fan       data_produk_fan   @default(OFF)
+  ts        DateTime          @db.DateTime(0)
+  produk    produk            @relation(fields: [id_produk], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_data_produk_produk")
+
+  @@index([id_produk], map: "id_produk")
+}
+
+model detail_user {
+  id          Int                 @id @default(autoincrement())
+  id_user     Int?                @default(0)
+  name        String?             @db.VarChar(50)
+  age         String?             @db.VarChar(50)
+  gender      detail_user_gender?
+  contact     String?             @db.VarChar(50)
+  job         String?             @db.VarChar(50)
+  created_at  DateTime?           @db.Timestamp(0)
+  users       users?              @relation(fields: [id_user], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__users")
+  subsciption subsciption[]
+  user_produk user_produk[]
+
+  @@index([id_user], map: "id_user")
+}
+
+model produk {
+  id          String        @id @db.VarChar(50)
+  nama        String?       @db.VarChar(50)
+  tinggi      Int?
+  lebar       Int?
+  kapasitas   Int?
+  telur       Int?
+  pass_access String?       @db.VarChar(50)
+  data_produk data_produk[]
+  user_produk user_produk[]
+}
+
+model subsciption {
+  id          Int          @id @default(autoincrement())
+  id_cus      Int?
+  start_subs  DateTime?    @db.Timestamp(0)
+  end_subs    DateTime?    @db.Timestamp(0)
+  created_at  DateTime?    @db.Timestamp(0)
+  detail_user detail_user? @relation(fields: [id_cus], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__detail_user2")
+
+  @@index([id_cus], map: "id_cus")
+}
+
+model user_produk {
+  id          Int          @id @default(autoincrement())
+  id_cus      Int?         @default(0)
+  id_produk   String?      @db.VarChar(50)
+  created_at  DateTime?    @db.Timestamp(0)
+  detail_user detail_user? @relation(fields: [id_cus], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__detail_user")
+  produk      produk?      @relation(fields: [id_produk], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__produk")
+
+  @@index([id_cus], map: "id_cus")
+  @@index([id_produk], map: "id_produk")
+}
+
+model users {
+  id          Int           @id @default(autoincrement())
+  username    String        @db.VarChar(50)
+  email       String        @unique(map: "email") @db.VarChar(50)
+  password    String        @db.VarChar(50)
+  created_at  DateTime      @db.Timestamp(0)
+  detail_user detail_user[]
+}
+
+enum detail_user_gender {
+  Male
+  Female
+}
+
+enum data_produk_lampu {
+  ON
+  OFF
+}
+
+enum data_produk_fan {
+  ON
+  OFF
+}
