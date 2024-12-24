@@ -29,10 +29,7 @@ const ProfilePage: React.FC = async () => {
           <InCubeStatus title="Days left" value={2} />
         </div>
         <div className="flex flex-wrap gap-6 w-full lg:pl-[97px] ml-0 mx-auto">
-          <ProfileCard
-            name={session.user?.username ?? "User"}
-            location={session.user?.email ?? "Email"}
-          />
+          <ProfileCard />
           <AddressForm />
         </div>
       </div>

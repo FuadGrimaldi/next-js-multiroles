@@ -15,6 +15,9 @@ const disableNavbar = [
   "/user/dashboard",
   "/user/report",
   "/user/setting",
+  "/user/setting/edit-profile",
+  "/user/setting/add-address",
+  "/user/setting/edit-address",
 ];
 
 export default function RootLayoutClient({

@@ -1,6 +1,5 @@
 "use client";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 import React, { SyntheticEvent, useState } from "react";
 import axios from "axios";
@@ -10,9 +9,14 @@ import Swal from "sweetalert2";
 const Signup = () => {
   const router = useRouter();
   const [data, setData] = useState({
+    username: "",
     email: "",
     password: "",
-    username: "",
+    name: "",
+    age: "",
+    gender: "",
+    contact: "",
+    job: "",
   });
   const [isloading, setIsloading] = useState(false);
   const [error, setError] = useState("");
@@ -22,36 +26,45 @@ const Signup = () => {
     setError("");
     setIsloading(true);
     try {
-      const response = await axios.post("/api/register", {
+      // Register user
+      const authResponse = await axios.post("/api/register", {
         username: data.username,
         email: data.email,
         password: data.password,
       });
 
-      if (response.status === 201 || response.status === 200) {
-        if (response.data.status === false) {
-          Swal.fire({
-            position: "top",
-            icon: "error",
-            title: "Email Already Registered",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        } else {
-          Swal.fire({
-            position: "top",
-            icon: "success",
-            title: "Registration Success",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          router.push("/login");
-        }
+      if (authResponse.status === 201 || authResponse.status === 200) {
+        const id_user = authResponse.data.data.id;
+
+        // Save user details
+        await axios.post("/api/user", {
+          id_user,
+          name: data.name,
+          age: data.age,
+          gender: data.gender,
+          contact: data.contact,
+          job: data.job,
+        });
+
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: "Registration Successful",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        router.push("/login");
       } else {
-        setError("Gagal mendaftar. Silakan coba lagi.");
+        Swal.fire({
+          position: "top",
+          icon: "error",
+          title: "Registration Failed",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     } catch (error) {
-      setError("Gagal mendaftar. Silakan coba lagi.");
+      setError("Failed to register. Please try again.");
     } finally {
       setIsloading(false);
     }
@@ -67,8 +80,8 @@ const Signup = () => {
       className="flex justify-center items-center min-h-screen px-4"
       id="loginPage"
     >
-      <div className="absolute -z-1 h-2/3 w-1/2 rounded-lg bg-gradient-to-t from-transparent to-[#dee7ff47]"></div>
-      <div className="relative z-1 px-6 pb-7.5 pt-10 lg:px-10 lg:pt-15 xl:px-20 xl:pt-20 lg:mt-[90px] mt-[40px] w-full max-w-4xl">
+      <div className="absolute -z-1 lg:h-[700px] h-[900px] lg:w-1/2 w-[340px] rounded-lg bg-gradient-to-t from-transparent to-[#dee7ff47]"></div>
+      <div className="relative z-1 px-6 pb-7.5 lg:px-10 xl:px-20 mt-[100px] lg:w-full w-[300px] max-w-3xl bg-white">
         <motion.div
           variants={{
             hidden: { opacity: 0, y: -20 },
@@ -78,75 +91,148 @@ const Signup = () => {
           whileInView="visible"
           transition={{ duration: 1, delay: 0.1 }}
           viewport={{ once: true }}
-          className="animate_top rounded-lg bg-white px-6 py-6 shadow-solid-8 lg:px-10 xl:px-[200px] xl:py-[60px] w-full"
+          className="flex flex-col lg:flex-row gap-8 p-8 shadow-solid-8 rounded-lg"
         >
-          <h2 className="mb-6 text-center lg:text-4xl text-xl font-semibold text-black">
-            Create your account
-          </h2>
+          {/* Left Side - Auth Form */}
+          <div className="w-full lg:w-1/2">
+            <h2 className="mb-4 lg:text-2xl text-lg font-semibold text-black">
+              Account Information
+            </h2>
+            <form className="flex flex-col">
+              <div className="mb-2">
+                <label className="mb-2 block lg:text-lg text-base text-black">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  name="username"
+                  value={data.username}
+                  onChange={handleChange}
+                  placeholder="FuadGrimaldi"
+                  className="w-full rounded border bg-[#f8f8f8] border-stroke py-2 px-4 text-black outline-none focus:border-primary focus:bg-white"
+                />
+              </div>
+              <div className="mb-2">
+                <label className="mb-2 block lg:text-lg text-base text-black">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={data.email}
+                  onChange={handleChange}
+                  placeholder="example@domain.com"
+                  className="w-full rounded border bg-[#f8f8f8] border-stroke py-2 px-4 text-black outline-none focus:border-primary focus:bg-white"
+                />
+              </div>
+              <div className="mb-2">
+                <label className="mb-2 block lg:text-lg text-base text-black">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  value={data.password}
+                  onChange={handleChange}
+                  placeholder="************"
+                  className="w-full rounded border bg-[#f8f8f8] border-stroke py-2 px-4 text-black outline-none focus:border-primary focus:bg-white"
+                />
+              </div>
+            </form>
+          </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col w-full">
-            <div className="mb-6 w-full">
-              <label className="mb-2 block text-lg text-black lg:text-xl">
-                Username
-              </label>
-              <input
-                type="text"
-                name="username"
-                value={data.username}
-                onChange={handleChange}
-                placeholder="FuadGrimaldi"
-                className="w-full rounded border bg-[#f8f8f8] border-stroke py-3 px-5 text-black outline-none transition-all focus:border-primary focus:bg-white focus:shadow-input text-base"
-              />
-            </div>
-            <div className="mb-6 w-full">
-              <label className="mb-2 block text-lg text-black lg:text-xl">
-                Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={data.email}
-                onChange={handleChange}
-                placeholder="example@domain.com"
-                className="w-full rounded border bg-[#f8f8f8] border-stroke py-3 px-5 text-black outline-none transition-all focus:border-primary focus:bg-white focus:shadow-input text-base"
-              />
-            </div>
-
-            <div className="mb-6 w-full">
-              <label className="mb-2 block text-lg text-black lg:text-xl">
-                Password
-              </label>
-              <input
-                type="password"
-                name="password"
-                value={data.password}
-                onChange={handleChange}
-                placeholder="************"
-                className="w-full rounded border bg-[#f8f8f8] border-stroke py-3 px-5 text-black outline-none transition-all focus:border-primary focus:bg-white focus:shadow-input"
-              />
-            </div>
-
-            <div className="mb-5">
+          {/* Right Side - User Details */}
+          <div className="w-full lg:w-1/2">
+            <h2 className="mb-4 lg:text-2xl text-lg font-semibold text-black">
+              User Details
+            </h2>
+            <form onSubmit={handleSubmit} className="flex flex-col">
+              <div className="mb-2">
+                <label className="mb-2 block lg:text-lg text-base text-black">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={data.name}
+                  onChange={handleChange}
+                  placeholder="Full Name"
+                  className="w-full rounded border bg-[#f8f8f8] border-stroke py-2 px-4 text-black outline-none focus:border-primary focus:bg-white"
+                />
+              </div>
+              <div className="mb-2">
+                <label className="mb-2 block lg:text-lg text-base text-black">
+                  Age
+                </label>
+                <input
+                  type="text"
+                  name="age"
+                  value={data.age}
+                  onChange={handleChange}
+                  placeholder="Your Age"
+                  className="w-full rounded border bg-[#f8f8f8] border-stroke py-2 px-4 text-black outline-none focus:border-primary focus:bg-white"
+                />
+              </div>
+              <div className="mb-2">
+                <label className="mb-2 block lg:text-lg text-base text-black">
+                  Gender
+                </label>
+                <select
+                  name="gender"
+                  value={data.gender}
+                  onChange={handleChange}
+                  className="w-full rounded border bg-[#f8f8f8] border-stroke py-2 px-4 text-black outline-none focus:border-primary focus:bg-white"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+              <div className="mb-2">
+                <label className="mb-2 block lg:text-lg text-base text-black">
+                  Contact
+                </label>
+                <input
+                  type="text"
+                  name="contact"
+                  value={data.contact}
+                  onChange={handleChange}
+                  placeholder="Phone Number"
+                  className="w-full rounded border bg-[#f8f8f8] border-stroke py-2 px-4 text-black outline-none focus:border-primary focus:bg-white"
+                />
+              </div>
+              <div className="mb-6">
+                <label className="mb-2 block lg:text-lg text-base text-black">
+                  Job
+                </label>
+                <input
+                  type="text"
+                  name="job"
+                  value={data.job}
+                  onChange={handleChange}
+                  placeholder="Your Job"
+                  className="w-full rounded border bg-[#f8f8f8] border-stroke py-2 px-4 text-black outline-none focus:border-primary focus:bg-white"
+                />
+              </div>
               <button
                 type="submit"
-                className="w-full rounded bg-[#10375C] hover:text-[#F3C623] transition-all duration-500 py-3 px-5 font-medium lg:text-xl text-lg"
+                className="w-full rounded bg-[#10375C] text-white hover:text-[#F3C623] transition-all duration-500 py-2 px-4 font-medium lg:text-lg text-base"
                 disabled={isloading}
               >
                 {isloading ? "Loading..." : "Register"}
               </button>
-            </div>
-          </form>
-
-          <p className="text-center text-lg font-medium text-black">
-            Have an account?
-            <Link
-              href="/login"
-              className="ml-2 font-medium text-primary hover:underline"
-            >
-              Sign In
-            </Link>
-          </p>
+            </form>
+          </div>
         </motion.div>
+        <p className="mb-5 text-center lg:text-lg text-base font-medium text-black">
+          Already have an account?{" "}
+          <Link
+            href="/login"
+            className="ml-2 font-medium text-primary hover:underline"
+          >
+            Sign In
+          </Link>
+        </p>
       </div>
     </section>
   );

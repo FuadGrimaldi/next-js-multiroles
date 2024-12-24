@@ -1,49 +1,79 @@
 "use client";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { FaEllipsisV } from "react-icons/fa";
-import axios from "axios";
+import { FaEllipsisV, FaPlus } from "react-icons/fa";
+
+type AddressData = {
+  name: string;
+  Kecamatan: string;
+  provinsi: string;
+  Kabupaten: string;
+  Kelurahan: string;
+  Kode_pos: string;
+  alamat_lengkap?: string;
+  users: {
+    email: string;
+    username: string;
+  };
+};
 
 const AddressForm: React.FC = () => {
-  const [addressData, setAddressData] = useState<any>({}); // Store the address data
-  const [isLoading, setIsLoading] = useState(true); // Handle loading state
-  const [userId, setUserId] = useState<string | null>(null); // State to store userId
-  const provinsi = useState<string | null>(null); // State to store provins
+  const [addressData, setAddressData] = useState<AddressData | null>(null);
+  const [isLoading, setLoading] = useState(true); // Handle loading state
+
+  const router = useRouter();
+  const handleEditClick = () => {
+    router.push("/user/setting/edit-address");
+  };
 
   useEffect(() => {
-    // Only access localStorage on the client side
-    if (typeof window !== "undefined") {
-      const storedUserId = localStorage.getItem("id"); // Get the user ID from localStorage
-      if (storedUserId) {
-        setUserId(storedUserId); // Set userId in state
+    // Ambil userId dari localStorage
+    const userId = localStorage.getItem("id");
+
+    if (!userId) {
+      console.error("User ID not found in localStorage");
+      return;
+    }
+    // Fetch API untuk mendapatkan data profil
+    const fetchAddressData = async () => {
+      try {
+        const response = await fetch(`/api/address/${userId}`); // Gunakan userId di URL
+        if (!response.ok) {
+          throw new Error("Failed to fetch Address data");
+        }
+        const data = await response.json();
+        setAddressData(data.data.data); // pastikan data berada dalam field 'data'
+      } catch (error) {
+        console.error("Error fetching Address data:", error);
+      } finally {
+        setLoading(false);
       }
-    }
-  }, []);
+    };
 
-  useEffect(() => {
-    // Fetch the address data when the component mounts and userId is available
-    if (userId) {
-      axios
-        .get(`/api/address?id=${userId}`)
-        .then((response) => {
-          if (response.data.status === 200) {
-            setAddressData(response.data.data[0]); // Set the fetched address data
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching address data:", error);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }
-  }, [userId]);
+    fetchAddressData();
+  }, []);
 
   if (isLoading) {
     return <div>Loading...</div>; // Show loading text while data is being fetched
   }
 
+  // Show a message when address data is not found, and provide an option to create an address
   if (!addressData) {
-    return <div>No address data found.</div>; // Handle case when no address data is available
+    return (
+      <div className="lg:max-w-md w-full p-4 bg-white rounded-lg shadow-md border border-gray-200">
+        <div className="mb-4">
+          <div className="text-gray-700 text-lg font-semibold">
+            No address data found.
+          </div>
+        </div>
+        <a
+          href="setting/add-address" // Use <a> tag for navigation
+          className="text-base block mt-4 mx-2 text-center bg-yellow-500 text-white py-2 rounded-md font-medium hover:bg-yellow-600 flex justify-center items-center"
+        >
+          <FaPlus className="mr-2" /> Add Address
+        </a>
+      </div>
+    );
   }
 
   return (
@@ -63,7 +93,7 @@ const AddressForm: React.FC = () => {
           </label>
           <input
             type="text"
-            className="mt-1 w-full rounded-sm border-gray-300 bg-gray-500 p-1 text-white"
+            className="mt-1 w-full rounded-sm border-gray-300 bg-gray-100 text-black p-1 "
             value={addressData?.provinsi || "kosong"}
             disabled
           />
@@ -74,7 +104,7 @@ const AddressForm: React.FC = () => {
           </label>
           <input
             type="text"
-            className="mt-1 w-full rounded-sm border-gray-300 bg-gray-500 p-1 "
+            className="mt-1 w-full rounded-sm border-gray-300 bg-gray-100 text-black p-1 "
             value={addressData?.Kabupaten || ""}
             disabled
           />
@@ -85,7 +115,7 @@ const AddressForm: React.FC = () => {
           </label>
           <input
             type="text"
-            className="mt-1 w-full rounded-sm border-gray-300 bg-gray-500 p-1"
+            className="mt-1 w-full rounded-sm border-gray-300 bg-gray-100 text-black p-1"
             value={addressData?.Kecamatan || ""}
             disabled
           />
@@ -96,7 +126,7 @@ const AddressForm: React.FC = () => {
           </label>
           <input
             type="text"
-            className="mt-1 w-full rounded-sm border-gray-300 bg-gray-500 p-1"
+            className="mt-1 w-full rounded-sm border-gray-300 bg-gray-100 text-black p-1"
             value={addressData?.Kelurahan || ""}
             disabled
           />
@@ -107,7 +137,7 @@ const AddressForm: React.FC = () => {
           </label>
           <input
             type="text"
-            className="mt-1 w-full rounded-sm border-gray-300 bg-gray-500 p-1"
+            className="mt-1 w-full rounded-sm border-gray-300 bg-gray-100 text-black p-1"
             value={addressData?.Kode_pos || ""}
             disabled
           />
@@ -117,16 +147,19 @@ const AddressForm: React.FC = () => {
             Nama Jalan, Gedung, No. Rumah
           </label>
           <textarea
-            className="mt-1 w-full rounded-sm bg-gray-500 p-1 py-3"
-            value={addressData?.alama_lengkap || ""}
+            className="mt-1 w-full rounded-sm bg-gray-100 text-black p-1 py-3"
+            value={addressData?.alamat_lengkap || ""}
             rows={2}
             disabled
           />
         </div>
-        <button className="w-full bg-yellow-500 text-white py-2 rounded-md font-medium hover:bg-yellow-600">
-          Edit
-        </button>
       </form>
+      <button
+        className="w-full bg-yellow-500 text-white py-2 rounded-md font-medium hover:bg-yellow-600 mt-4"
+        onClick={handleEditClick}
+      >
+        Edit Address
+      </button>
     </div>
   );
 };

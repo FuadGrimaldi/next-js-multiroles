@@ -46,8 +46,8 @@ export const getAllDetailUsers = async () => {
 // Get a single detail_user by ID
 export const getDetailUserById = async (id: number) => {
   try {
-    const detailUser = await prisma.detail_user.findUnique({
-      where: { id },
+    const detailUser = await prisma.detail_user.findFirst({
+      where: { id_user: id },
       include: {
         users: true, // Include related user data
       },
@@ -74,8 +74,14 @@ export const updateDetailUser = async (
   }
 ) => {
   try {
+    const detailUser = await prisma.detail_user.findFirst({
+      where: { id_user: id },
+      include: {
+        users: true, // Include related user data
+      },
+    });
     const updatedDetailUser = await prisma.detail_user.update({
-      where: { id },
+      where: { id: detailUser?.id },
       data: {
         name: data.name,
         age: data.age,

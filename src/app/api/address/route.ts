@@ -1,39 +1,43 @@
+import { createAddresslUser } from "./../../../lib/prisma-service/addressService";
 import { NextResponse } from "next/server";
-import {
-  retrieveDataById,
-  retrieveData,
-  userAddress,
-} from "@/lib/firebase/addressService";
-import { NextRequest } from "next/server";
 
-export const GET = async (request: NextRequest) => {
+export async function POST(req: Request) {
   try {
-    // Ambil parameter id dari URL
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id");
+    const body = await req.json();
+    const {
+      id_user,
+      Kecamatan,
+      provinsi,
+      Kabupaten,
+      Kelurahan,
+      Kode_pos,
+      alamat_lengkap,
+    } = body;
 
-    // Validasi id
-    if (id) {
-      const userProfile = await userAddress("address", id);
-      if (userProfile) {
-        return NextResponse.json({
-          status: 200,
-          message: "success",
-          data: userProfile,
-        });
-      }
+    if (
+      !id_user ||
+      !Kecamatan ||
+      !provinsi ||
+      !Kabupaten ||
+      !Kelurahan ||
+      !Kode_pos ||
+      !alamat_lengkap
+    ) {
+      return NextResponse.json(
+        { success: false, message: "All fields are required" },
+        { status: 400 }
+      );
     }
-    return NextResponse.json({
-      status: 404,
-      message: "Not Found",
-      data: null,
-    });
-  } catch (error) {
-    // Tangani error
-    console.error("Error fetching user profile:", error);
+
+    const newAddress = await createAddresslUser(body);
     return NextResponse.json(
-      { message: "An error occurred while fetching user profile" },
-      { status: 500 } // Internal Server Error
+      { success: true, data: newAddress },
+      { status: 201 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, message: "Failed to create address", error },
+      { status: 500 }
     );
   }
-};
+}
