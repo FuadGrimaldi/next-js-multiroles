@@ -18,6 +18,7 @@ export const createDetailUser = async (data: {
         gender: data.gender,
         contact: data.contact,
         job: data.job,
+        created_at: new Date(),
       },
     });
     return { success: true, data: newDetailUser };
