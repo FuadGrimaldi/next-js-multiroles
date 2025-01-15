@@ -16,14 +16,6 @@ const sidebarStructure = [
     link: "/user/report",
   },
   {
-    id: "setting",
-    title: "Setting",
-    name: "setting",
-    parent: true,
-    icon: "perusahaan",
-    link: "/user/setting",
-  },
-  {
     id: "controlling",
     title: "Controlling",
     name: "controlling",
@@ -32,7 +24,7 @@ const sidebarStructure = [
     child: [
       {
         id: "input-telur",
-        title: "Eggs Control",
+        title: "eggs Monitoring",
         name: "input-telur",
         link: "/user/input-telur",
         icon: "dot",
@@ -41,10 +33,18 @@ const sidebarStructure = [
         id: "input-aktuator",
         title: "Incube Control",
         name: "input-aktuator",
-        link: "/user/input-telur",
+        link: "/user/controlling",
         icon: "dot",
       },
     ],
+  },
+  {
+    id: "setting",
+    title: "Setting",
+    name: "setting",
+    parent: true,
+    icon: "perusahaan",
+    link: "/user/setting",
   },
   {
     id: "logout",

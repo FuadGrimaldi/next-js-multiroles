@@ -1,9 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { FaEllipsisV, FaLock, FaPlus } from "react-icons/fa";
+import CardIncubeControll from "../Card/cardControlling";
 import PassKeyModal from "../modal/showModal";
-import CardIncubeDashboard from "../Card/cardDashboard";
 
 type UserSubs = {
   id: number;
@@ -33,11 +32,10 @@ type UserSubs = {
   };
 };
 
-const Dashboard = () => {
+const ControlCom = () => {
   const [userSubsData, setUserSubsData] = useState<UserSubs[] | null>(null);
   const [productId, setProductId] = useState<string | any>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const router = useRouter();
 
   useEffect(() => {
     // Ambil userId dari localStorage
@@ -103,19 +101,20 @@ const Dashboard = () => {
         <PassKeyModal></PassKeyModal>
       </div>
       {userSubsData
-        ?.filter((subs) => subs.produk.active === "Y") // Filter hanya produk yang aktif
+        ?.filter((subs) => subs.produk.active === "Y")
         .map((subs) => (
-          <CardIncubeDashboard
+          <CardIncubeControll
             key={subs.id}
             productId={subs.produk.id}
-            telur={subs.produk.telur}
-            name={subs.produk.nama}
-            tinggi={subs.produk.tinggi}
+            nama={subs.produk.nama}
             lebar={subs.produk.lebar}
+            tinggi={subs.produk.tinggi}
+            telur={subs.produk.telur}
+            kapasitas={subs.produk.kapasitas}
           />
         ))}
     </div>
   );
 };
 
-export default Dashboard;
+export default ControlCom;

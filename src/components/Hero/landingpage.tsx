@@ -87,7 +87,7 @@ const Landingpage = () => {
                 transition={{ duration: 1.5 }}
               >
                 <a
-                  href="#"
+                  href="/subscribe"
                   title=""
                   className="inline-flex items-center px-8 py-4 text-lg text-white transition-all duration-200 bg-gray-900 border border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 font-pj justif-center hover:bg-gray-600"
                   role="button"

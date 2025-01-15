@@ -78,14 +78,14 @@ const ReportCom = () => {
   // Show a message when address data is not found, and provide an option to create an address
   if (!userSubsData || userSubsData.length === 0) {
     return (
-      <div className="w-[350px] md:w-[1430px] h-[300x] p-4 m-5 lg:ml-60 ml-40">
+      <div>
         <div className="mb-4">
           <div className="text-gray-700 text-lg font-semibold">
             Your are not subscribe.
           </div>
         </div>
         <a
-          href="subscribe" // Use <a> tag for navigation
+          href="/subscribe" // Use <a> tag for navigation
           className="btn text-base block mt-4 mx-2 text-center bg-yellow-500 text-white py-2 rounded-md font-medium hover:bg-yellow-600 flex justify-center items-center"
         >
           <FaLock className="mr-2" /> Klik this to subscribe

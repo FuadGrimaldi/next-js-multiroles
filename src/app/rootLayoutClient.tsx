@@ -15,6 +15,7 @@ const disableNavbar = [
   "/user/dashboard",
   "/user/report",
   "/user/input-telur",
+  "/user/controlling",
   "/user/setting",
   "/user/setting/edit-profile",
   "/user/setting/add-address",

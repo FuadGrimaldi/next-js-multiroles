@@ -236,8 +236,8 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
               recursive === 0
                 ? "lg:pl-2 pl-0"
                 : recursive === 1
-                ? "pl-11"
-                : "pl-16",
+                ? "lg:pl-11 pl-4"
+                : "lg:pl-16 pl-2",
               activeName === item.name || activeName.split(".")[0] === item.name
                 ? `text-black font-semibold ${
                     item.parent
