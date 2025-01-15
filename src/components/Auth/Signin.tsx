@@ -94,7 +94,7 @@ const Signin = () => {
             viewport={{ once: true }}
             className="animate_top rounded-lg bg-white px-6 pt-7.5 shadow-solid-8 xl:px-[200px] xl:py-[43px] py-6 xl:pt-15"
           >
-            <h2 className="mb-6 text-center lg:text-4xl text-xl font-semibold text-black">
+            <h2 className="mb-6 text-center lg:text-4xl text-lg font-semibold text-black">
               Login to Your Account
             </h2>
 
@@ -102,7 +102,7 @@ const Signin = () => {
 
             <form className="flex flex-col" onSubmit={handleSubmit}>
               <div className="mb-6">
-                <label className="mb-2 block text-lg text-black lg:text-xl">
+                <label className="mb-2 block text-base text-black lg:text-xl">
                   Email
                 </label>
                 <input
@@ -117,7 +117,7 @@ const Signin = () => {
               </div>
 
               <div className="mb-6">
-                <label className="mb-2 block text-lg text-black lg:text-xl">
+                <label className="mb-2 block text-base text-black lg:text-xl">
                   Password
                 </label>
                 <input
@@ -145,7 +145,7 @@ const Signin = () => {
               </div>
             </form>
 
-            <p className="text-center text-lg font-medium text-black">
+            <p className="text-center lg:text-lg text-base font-medium text-black">
               Don’t have an account?
               <Link
                 href="/register"

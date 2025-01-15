@@ -64,7 +64,7 @@ const PassKeyModal = () => {
       {/* Button to open the modal */}
       <a
         onClick={() => setShowModal(true)}
-        className="text-base mt-4 text-center bg-yellow-500 text-white py-2 rounded-md font-medium hover:bg-yellow-600 flex justify-center items-center"
+        className="text-base mt-4 text-center bg-yellow-500 text-white py-2 rounded-md shadow-md font-medium hover:bg-yellow-600 flex justify-center items-center"
       >
         <FaPlus className="mr-2" /> Klik this to Activate
       </a>
@@ -79,10 +79,10 @@ const PassKeyModal = () => {
           ></div>
 
           {/* Modal content */}
-          <div className="fixed z-10 inset-0 flex items-center justify-center overflow-y-auto">
-            <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-xl">
+          <div className="fixed z-99 inset-0 flex items-center justify-center overflow-y-auto">
+            <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-xl lg:mx-0 mx-[50px] lg:ml-0 ml-[105px]">
               <div className="flex items-start">
-                <div className="flex-shrink-0 p-2 bg-yellow-100 rounded-full">
+                <div className="flex-shrink-0 p-2 bg-yellow-100 rounded-full hidden lg:block">
                   <svg
                     className="h-6 w-6 text-gray-600"
                     xmlns="http://www.w3.org/2000/svg"

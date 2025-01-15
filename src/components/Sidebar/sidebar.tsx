@@ -230,10 +230,16 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
             }
             className={[
               "group m-0 flex cursor-pointer rounded-lg justify-between h-12 py-0 mb-1 focus:outline-none",
-              recursive === 0 ? "pl-2" : recursive === 1 ? "pl-11" : "pl-16",
+              recursive === 0
+                ? "lg:pl-2 pl-0"
+                : recursive === 1
+                ? "pl-11"
+                : "pl-16",
               activeName === item.name || activeName.split(".")[0] === item.name
                 ? `text-black font-semibold ${
-                    item.parent ? "text-black bg-white" : "bg-transparent"
+                    item.parent
+                      ? "text-black lg:bg-white bg-trasparent"
+                      : "bg-transparent"
                   }`
                 : `text-white ${item.parent && ""}`,
               "hover:bg-slate-300/20",
@@ -325,10 +331,10 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
         "duration-300 ease-in-out md:fixed md:translate-x-0",
         `${
           isExpand
-            ? "bg-slate-50 w-72"
+            ? "bg-slate-50 lg:w-72 w-[200px]"
             : isExpandOnHover
-            ? "bg-slate-50 w-72"
-            : "bg-slate-50 w-20"
+            ? "bg-slate-50 lg:w-72 w-[200px]"
+            : "bg-slate-50 lg:w-20 w-[60px]"
         }`,
       ].join(" ")}
     >

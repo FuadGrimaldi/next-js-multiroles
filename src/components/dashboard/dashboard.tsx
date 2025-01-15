@@ -96,6 +96,12 @@ const Dashboard = () => {
 
   return (
     <div>
+      <div className="mb-4">
+        <div className="text-gray-700 text-lg font-semibold ">
+          Activate your Incube
+        </div>
+        <PassKeyModal></PassKeyModal>
+      </div>
       {userSubsData
         ?.filter((subs) => subs.produk.active === "Y") // Filter hanya produk yang aktif
         .map((subs) => (
@@ -108,12 +114,6 @@ const Dashboard = () => {
             lebar={subs.produk.lebar}
           />
         ))}
-      <div className="mb-4">
-        <div className="text-gray-700 text-lg font-semibold">
-          Activate your Incube
-        </div>
-      </div>
-      <PassKeyModal></PassKeyModal>
     </div>
   );
 };

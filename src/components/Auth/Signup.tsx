@@ -77,11 +77,11 @@ const Signup = () => {
 
   return (
     <section
-      className="flex justify-center items-center min-h-screen px-4"
+      className="flex justify-center items-center min-h-screen lg:px-4 px-0"
       id="loginPage"
     >
       <div className="absolute -z-1 lg:h-[700px] h-[900px] lg:w-1/2 w-[340px] rounded-lg bg-gradient-to-t from-transparent to-[#dee7ff47]"></div>
-      <div className="relative z-1 px-6 pb-7.5 lg:px-10 xl:px-20 mt-[100px] lg:w-full w-[300px] max-w-3xl bg-white">
+      <div className="relative z-1 px-0 pb-7.5 lg:px-10 xl:px-20 mt-[100px] lg:w-full w-[300px] max-w-3xl bg-white">
         <motion.div
           variants={{
             hidden: { opacity: 0, y: -20 },
