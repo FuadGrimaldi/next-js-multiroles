@@ -24,6 +24,11 @@ type DoubleChartProps = {
   humidityData: number[];
   gasData: number[];
   labels: string[];
+  name?: string;
+  lebar?: number; //
+  tinggi?: number; //
+  statusCon: string;
+  statusIp: string; // status koneksi internet
 };
 
 function DoubleChart({
@@ -31,6 +36,11 @@ function DoubleChart({
   humidityData,
   gasData,
   labels,
+  name,
+  tinggi,
+  lebar,
+  statusCon,
+  statusIp,
 }: DoubleChartProps) {
   // Data for Temperature Chart
   // Ambil 10 data terakhir untuk menghindari chart yang terlalu padat
@@ -188,6 +198,39 @@ function DoubleChart({
       {/* Gas Chart */}
       <div className="lg:h-[400px] h-[300px] lg:w-full w-[240px]">
         <Line data={gasChartData} options={gasOptions as any} />
+      </div>
+      <div className="w-[240px] lg:w-1/2 lg:mt-[56px] mt-2 px-4 pb-2 lg:px-0 mx-auto">
+        <div className="bg-white border rounded-md shadow-md lg:mx-4 mx-0 p-2">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-4 lg:px-6 px-2 pt-[6px]">
+            <h3 className="lg:text-lg text-base font-semibold text-gray-800">
+              Network Connection
+            </h3>
+            <div className="text-green-500 text-xl mb-2">📶</div>
+          </div>
+          <div className="flex flex-col items-center mb-4">
+            <span className="text-base text-green-500 bg-green-100 px-3 py-1 rounded-full">
+              {statusCon || "-"}
+            </span>
+          </div>
+          <div className="bg-gray-100 p-3 rounded-lg mx-3 px-6 py-[8px]">
+            <p className="text-sm text-gray-600">IP {statusIp || "-"} </p>
+          </div>
+          <div className="flex items-center justify-between mb-4 lg:px-6 px-2 pt-[6px]">
+            <h3 className="lg:text-lg text-base font-semibold text-gray-800">
+              Info product
+            </h3>
+          </div>
+          {/* Device Info */}
+          <div className="bg-gray-100 p-3 rounded-lg mb-2 mx-3 px-6 py-[8px]">
+            <p className="text-sm text-gray-600">{name}</p>
+          </div>
+          <div className="bg-gray-100 p-3 rounded-lg mb-2 mx-3 px-6 py-[8px]">
+            <p className="text-sm text-gray-600">
+              {lebar} x {tinggi}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

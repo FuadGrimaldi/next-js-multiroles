@@ -1,10 +1,10 @@
 // File: /pages/dashboard.tsx
 import React from "react";
-import Card from "@/components/Card";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
+import Dashboard from "@/components/dashboard/dashboard";
 
 export const metadata: Metadata = {
   title: "Dashboard Incube",
@@ -24,10 +24,10 @@ const DashboardPage = async () => {
   return (
     <div className="p-6">
       <h1 className="lg:text-4xl text-2xl font-semibold text-black mb-6">
-        Dashboard, {session.user?.username || "User"}
+        Dashboard
       </h1>
       <div className="h-max-screen">
-        <Card />
+        <Dashboard />
         {/* <Card /> */}
       </div>
     </div>

@@ -15,10 +15,10 @@ const SensorCard: React.FC<SensorCardProps> = ({
   if (!type) return null;
 
   return (
-    <div className="flex items-center justify-between bg-gray-200 rounded-lg shadow-md px-6 py-4">
+    <div className="flex items-center justify-between bg-gray-200 rounded-lg shadow-md lg:px-6 lg:py-4 px-2 py-1">
       <div className="mr-5">
         <p className="text-sm text-gray-500">{type}</p>
-        <p className="lg:text-2xl text-lg font-bold text-gray-900">
+        <p className="lg:text-2xl text-base font-bold text-gray-900">
           {sensor}
           {format}
         </p>
