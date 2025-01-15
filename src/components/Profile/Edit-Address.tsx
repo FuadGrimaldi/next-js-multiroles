@@ -39,8 +39,8 @@ const UpdateAddressForm: React.FC = () => {
           throw new Error("Failed to fetch Address data");
         }
         const data = await response.json();
-        setAddressData(data.data.data);
-        setIdAddress(data.data.data.id);
+        setAddressData(data.data);
+        setIdAddress(data.data.id);
       } catch (error) {
         console.error("Error fetching Address data:", error);
       } finally {

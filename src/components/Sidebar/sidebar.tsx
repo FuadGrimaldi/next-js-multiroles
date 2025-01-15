@@ -14,8 +14,8 @@ interface SidebarProps {
 }
 
 const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
-  const username = "Farmers";
-  const company = "Field";
+  const username = localStorage.getItem("username");
+  const company = localStorage.getItem("email");
   const profilePic =
     "https://img.mbiz.web.id/180x180/erp/R2p1IXoyVEpBMk01WOEAdaI3hHVlkuIg0wW5_pn-CJCKHSrA_n1-U1tfE7Bl5H4_4Z7AxgL0DPOmUCdPuCHHC5lWvMU5Ig3t1uDrkVN53MlWlnA";
   const link = "/";
@@ -49,6 +49,9 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
   };
   const handleLogout = (event: React.MouseEvent<HTMLAnchorElement>) => {
     localStorage.removeItem("id");
+    localStorage.removeItem("username");
+    localStorage.removeItem("email");
+    localStorage.removeItem("productId");
     event.preventDefault(); // Prevent default link behavior
     signOut({
       redirect: true,

@@ -37,6 +37,8 @@ const Signin = () => {
         // console.log("ini di singin ", userId);
 
         localStorage.setItem("id", userId);
+        localStorage.setItem("username", response.data.user.username);
+        localStorage.setItem("email", response.data.user.email);
         Swal.fire({
           position: "top",
           icon: "success",
