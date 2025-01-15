@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 const Landingpage = () => {
   return (
     <motion.div
-      className="lg:max-w-screen pt-[500px] lg:py-[250px] lg:px-[100px] px-[80px]"
+      className="lg:max-w-screen pt-[400px] lg:py-[250px] lg:px-[110px] px-[80px]"
       id="LandingPage"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -118,19 +118,6 @@ const Landingpage = () => {
                   Download Mobile App
                 </a>
               </motion.div>
-            </motion.div>
-
-            <motion.div
-              className="xl:col-span-3"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.5 }}
-            >
-              <img
-                className="w-full mx-auto scale-110 hidden md:block"
-                src="https://d33wubrfki0l68.cloudfront.net/29c501c64b21014b3f2e225abe02fe31fd8f3a5c/f866d/images/hero/3/illustration.png"
-                alt=""
-              />
             </motion.div>
           </div>
         </div>

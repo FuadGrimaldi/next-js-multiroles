@@ -11,8 +11,6 @@ type ClientType = {
 };
 
 function Card() {
-  // const [temp, setTemp] = useState<string | null>(null);
-  // const [humid, setHumid] = useState<string | null>(null);
   const [temp, setTemp] = useState<number[]>([]); // store temperature data
   const [humid, setHumid] = useState<number[]>([]); // store humidity data
   const [labels, setLabels] = useState<string[]>([]);
@@ -20,12 +18,11 @@ function Card() {
   const [statusFan, setStatusFan] = useState<string | null>(null);
   const [statusLam, setStatusLam] = useState<string | null>(null);
   const [statusFlame, setStatusFlame] = useState<string | null>(null);
-  const [mintemp, setMinTemp] = useState<number | null>(null);
-  const [newMinTemp, setNewMinTemp] = useState<number | null>(null);
+  const [statusCon, setStatisCon] = useState<string | null>(null);
   const [client, setClient] = useState<ClientType | null>(null);
   const [isConnected, setIsConnected] = useState(false);
-  const [openall, setOpenall] = useState(false);
   const [isOpen, setIsOpen] = useState(false); // For controlling dropdown
+  const [lastMessageTime, setLastMessageTime] = useState<number>(Date.now());
 
   const connectToMqttBroker = async () => {
     const clientID = "clientID-inc-mqtt";
@@ -39,6 +36,7 @@ function Card() {
     mqttClient.onConnectionLost = (responseObject: any) => {
       if (responseObject.errorCode !== 0) {
         setIsConnected(false);
+        setStatisCon("Disconnected");
       }
     };
 
@@ -46,27 +44,17 @@ function Card() {
       onSuccess: () => {
         setClient(mqttClient);
         setIsConnected(true);
+        setStatisCon("Connected");
       },
       onFailure: (message: any) => {
         setIsConnected(false);
+        setStatisCon("Disconnected");
       },
     });
   };
 
-  // const messageArrived = (message: any) => {
-  //   const payload = message.payloadString;
-  //   const topic = message.destinationName;
-
-  //   if (topic === "inCube/Temp") {
-  //     setTemp(payload);
-  //   } else if (topic === "inCube/Humid") {
-  //     setHumid(payload);
-  //   } else if (topic === "inCube/Gas") {
-  //     setGas(payload);
-  //   }
-  // };
-
   const messageArrived = (message: any) => {
+    setLastMessageTime(Date.now());
     const payload = message.payloadString;
     const topic = message.destinationName;
 
@@ -141,6 +129,17 @@ function Card() {
       ]);
     }
   }, [temp, humid]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (Date.now() - lastMessageTime > 5000) {
+        setStatisCon("Disconnected");
+      } else {
+        setStatisCon("Connected");
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [lastMessageTime]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -194,15 +193,11 @@ function Card() {
           />
         </div>
         <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-2">
-          <div
-            className={`flex items-center justify-between rounded-lg shadow-md px-6 py-[17px] ${
-              isDangerous ? "bg-red-500" : "bg-yellow-400"
-            }`}
-          >
+          <div className="flex items-center justify-between rounded-lg shadow-md px-6 py-[17px] bg-yellow-400">
             <div className="mr-5">
-              <p className="text-sm text-gray-500">Status</p>
+              <p className="text-sm text-gray-500">Connection Incube</p>
               <p className="lg:text-2xl text-lg font-bold text-gray-900">
-                {isDangerous ? "Berbahaya" : "Aman"}
+                {statusCon || "-"}
               </p>
             </div>
           </div>
@@ -243,6 +238,20 @@ function Card() {
               <p className="text-sm text-gray-500">Status Flame</p>
               <p className="lg:text-2xl text-lg font-bold text-gray-900">
                 {statusFlame || "-"}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-2">
+          <div
+            className={`flex items-center justify-between rounded-lg shadow-md px-6 py-[17px] ${
+              isDangerous ? "bg-red-500" : "bg-yellow-400"
+            }`}
+          >
+            <div className="mr-5">
+              <p className="text-sm text-gray-500">Status</p>
+              <p className="lg:text-2xl text-lg font-bold text-gray-900">
+                {isDangerous ? "Berbahaya" : "Aman"}
               </p>
             </div>
           </div>

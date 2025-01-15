@@ -246,8 +246,12 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
                   <div className="h-3 w-3 flex items-center justify-center">
                     <div
                       className={[
-                        `${classesActive ? "h-2 w-2 " : "h-1 w-1"}`,
-                        "bg-current rounded-full duration-200",
+                        `${
+                          classesActive
+                            ? "h-2 w-2 text-black bg-white"
+                            : "h-1 w-1 bg-transparent "
+                        }`,
+                        "rounded-full duration-200",
                       ].join(" ")}
                     ></div>
                   </div>
@@ -273,8 +277,8 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
+                  className="h-[80px] w-[80px] mt-1"
+                  viewBox="0 0 40 40"
                   fill="currentColor"
                 >
                   <path

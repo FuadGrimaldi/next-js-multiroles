@@ -512,7 +512,7 @@ function CardNoStatus() {
               <div className="flex items-end mt-5">
                 <button
                   onClick={handleFilterByDateRange}
-                  className="bg-blue-500 lg:px-4 px-2 lg:py-2 py-1 lg:text-base text-sm rounded-md hover:bg-blue-600"
+                  className="flex items-end bg-blue-500 lg:px-4 px-2 lg:py-2 py-1 lg:text-base text-sm rounded-md hover:bg-blue-600"
                 >
                   Apply Filter
                 </button>
@@ -555,14 +555,12 @@ function CardNoStatus() {
                     {averageGas.toFixed(2)} PPM
                   </p>
                 </div>
-                <div className="bg-white p-4 rounded-lg shadow-md bg-[#FFC107]">
-                  <button
-                    onClick={handlePrintPDF}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                  >
-                    Print to PDF
-                  </button>
-                </div>
+                <button
+                  onClick={handlePrintPDF}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                >
+                  Print to PDF
+                </button>
               </div>
             </div>
           </div>
@@ -572,36 +570,27 @@ function CardNoStatus() {
               <p>Loading data...</p>
             ) : (
               <div className="relative">
-                <div className="absolute lg:relative top-10 lg:top-0 lg:transform-none lg:left-0 left-[248px] transform -translate-x-1/2 lg:translate-x-0 z-2 lg:bg-transparent bg-white shadow-lg lg:shadow-none rounded-lg overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <h2 className="lg:px-0 px-[39px] lg:py-0 py-[39px] lg:text-xl text-lg font-semibold text-black lg:my-[20px] my-4 ">
+                <div className="lg:bg-transparent overflow-hidden">
+                  <div className="overflow-x-auto lg:w-1/2 w-full">
+                    <h2 className="lg:text-xl text-lg font-semibold text-black lg:my-[20px] my-4 ">
                       Data
                     </h2>
                     <table className="w-full border-collapse border border-gray-300">
                       <thead>
                         <tr className="bg-gray-200">
-                          <th className="w-20 border border-gray-300 px-4 py-2 text-black text-sm">
+                          <th className="lg:w-10 w-8 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
                             No
                           </th>
-                          <th className="w-36 border border-gray-300 px-4 py-2 text-black text-sm">
-                            ID
-                          </th>
-                          <th className="w-32 border border-gray-300 px-4 py-2 text-black text-sm">
+                          <th className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
                             Temp
                           </th>
-                          <th className="w-32 border border-gray-300 px-4 py-2 text-black text-sm">
+                          <th className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
                             Humid
                           </th>
-                          <th className="w-32 border border-gray-300 px-4 py-2 text-black text-sm">
+                          <th className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
                             Gas
                           </th>
-                          <th className="w-32 border border-gray-300 px-4 py-2 text-black text-sm">
-                            Status Fan
-                          </th>
-                          <th className="w-32 border border-gray-300 px-4 py-2 text-black text-sm">
-                            Status Lamp
-                          </th>
-                          <th className="w-48 border border-gray-300 px-4 py-2 text-black text-sm">
+                          <th className="lg:w-32 w-28 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
                             Timestamp
                           </th>
                         </tr>
@@ -609,34 +598,26 @@ function CardNoStatus() {
                       <tbody>
                         {currentItems.map((item: any) => (
                           <tr key={item.id}>
-                            <td className="w-20 border border-gray-300 px-4 py-2 text-black text-sm">
+                            <td className="lg:w-10 w-8 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
                               {item.id}
                             </td>
-                            <td className="w-36 border border-gray-300 px-4 py-2 text-black text-sm">
-                              {item.id_produk}
-                            </td>
-                            <td className="w-32 border border-gray-300 px-4 py-2 text-black text-sm">
+                            <td className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
                               {item.suhu}
                             </td>
-                            <td className="w-32 border border-gray-300 px-4 py-2 text-black text-sm">
+                            <td className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
                               {item.humid}
                             </td>
-                            <td className="w-32 border border-gray-300 px-4 py-2 text-black text-sm">
+                            <td className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
                               {item.gas}
                             </td>
-                            <td className="w-32 border border-gray-300 px-4 py-2 text-black text-sm">
-                              {item.fan}
-                            </td>
-                            <td className="w-32 border border-gray-300 px-4 py-2 text-black text-sm">
-                              {item.lampu}
-                            </td>
-                            <td className="w-48 border border-gray-300 px-4 py-2 text-black text-sm">
+                            <td className="lg:w-32 w-28 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px] truncate">
                               {item.ts}
                             </td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
+
                     {/* Pagination */}
                     <div className="flex justify-between items-center mt-4">
                       <button
