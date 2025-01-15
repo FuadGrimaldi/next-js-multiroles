@@ -8,11 +8,22 @@ import { format } from "date-fns";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import Swal from "sweetalert2";
+import TemperatureBarChart from "../chart/barChart";
 
 type ClientType = {
   subscribe: (topic: string) => void;
   on: (event: string, callback: (message: any) => void) => void;
 };
+
+interface reportParams {
+  productId: string;
+  nama: string;
+  tinggi: number;
+  lebar: number; //
+  kapasitas: number;
+  telur: number;
+}
+
 type DataType = {
   id: string;
   id_produk: string;
@@ -24,7 +35,14 @@ type DataType = {
   ts: string; // timestamp
 };
 
-function CardNoStatus() {
+const CardIncubeReport: React.FC<reportParams> = ({
+  productId = "",
+  nama = "",
+  tinggi = 0,
+  lebar = 0,
+  kapasitas = 0,
+  telur = 0,
+}) => {
   const [isOpen, setIsOpen] = useState(false); // Untuk mengontrol dropdown
   const [temp, setTemp] = useState<number | null>(null);
   const [humid, setHumid] = useState<number | null>(null);
@@ -56,6 +74,10 @@ function CardNoStatus() {
   const [averageTemp, setAverageTemp] = useState(0); // Rata-rata suhu
   const [averageHumid, setAverageHumid] = useState(0); // Rata-rata humiditas
   const [averageGas, setAverageGas] = useState(0); // Rata-rata gas
+  const [maxTemp, setMaxTemp] = useState(0);
+  const [minTemp, setMinTemp] = useState(0);
+  const [maxHumid, setMaxHumid] = useState(0);
+  const [minHumid, setMinHumid] = useState(0);
 
   // Load data dari localStorage hanya di sisi klien
   useEffect(() => {
@@ -71,7 +93,7 @@ function CardNoStatus() {
   }, []);
 
   const connectToMqttBroker = async () => {
-    const clientID = "clientID-tes-mirsabanwar-mqtt";
+    const clientID = "clientID-inc-mqtt";
     const host = "broker.hivemq.com";
     const port = 8000;
 
@@ -100,14 +122,14 @@ function CardNoStatus() {
     const payload = parseFloat(message.payloadString);
     const topic = message.destinationName;
 
-    if (topic === "inCube/Temp") {
+    if (topic === `${productId}/Temp`) {
       setTemp(payload);
       setTempData((prevData) => {
         const newData = [...prevData, payload].slice(-7); // Menyimpan data harian untuk 7 hari
         localStorage.setItem("tempData", JSON.stringify(newData)); // Simpan di localStorage
         return newData;
       });
-    } else if (topic === "inCube/Humid") {
+    } else if (topic === `${productId}/Humid`) {
       setHumid(payload);
       setHumidData((prevData) => {
         const newData = [...prevData, payload].slice(-7);
@@ -131,8 +153,8 @@ function CardNoStatus() {
 
   useEffect(() => {
     if (client && isConnected) {
-      subscribeToTopic("inCube/Temp");
-      subscribeToTopic("inCube/Humid");
+      subscribeToTopic(`${productId}/Temp`);
+      subscribeToTopic(`${productId}/Humid`);
     }
   }, [client, isConnected]);
 
@@ -163,7 +185,7 @@ function CardNoStatus() {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("/api/data/getAllSensor");
+        const response = await fetch(`/api/data/sensor/${productId}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -301,6 +323,18 @@ function CardNoStatus() {
         0
       );
       const totalGas = filteredData.reduce((sum, item) => sum + item.gas, 0);
+      // Hitung nilai maksimum dan minimum
+      const maxTemp = Math.max(...filteredData.map((item) => item.suhu));
+      const minTemp = Math.min(...filteredData.map((item) => item.suhu));
+
+      const maxHumid = Math.max(...filteredData.map((item) => item.humid));
+      const minHumid = Math.min(...filteredData.map((item) => item.humid));
+
+      setMaxTemp(maxTemp);
+      setMinTemp(minTemp);
+
+      setMaxHumid(maxHumid);
+      setMinHumid(minHumid);
 
       setAverageTemp(totalTemp / filteredData.length);
       setAverageHumid(totalHumid / filteredData.length);
@@ -309,6 +343,11 @@ function CardNoStatus() {
       setAverageTemp(0);
       setAverageHumid(0);
       setAverageGas(0);
+      setMaxTemp(0);
+      setMinTemp(0);
+
+      setMaxHumid(0);
+      setMinHumid(0);
     }
   };
 
@@ -390,15 +429,15 @@ function CardNoStatus() {
     <div className="w-full border rounded-lg shadow-lg mb-4">
       <div className="flex justify-between items-center p-6 bg-gray-100 border-b">
         <div>
-          <h2 className="lg:text-3xl text-xl font-semibold text-black">
-            inCube #1
+          <h2 className="lg:text-3xl text-lg font-semibold text-black">
+            inCube #{productId}
           </h2>
         </div>
         <button
           onClick={toggleDropdown}
           className="text-blue-500 font-semibold"
         >
-          {isOpen ? "Hide Details" : "Show Details"}
+          {isOpen ? "Hide" : "Show"}
         </button>
       </div>
       {isOpen && (
@@ -415,8 +454,8 @@ function CardNoStatus() {
             />
 
             <div className="md:w-1/2 lg:pt-[50px]">
-              <div className="space-y-4">
-                <h2 className="lg:text-3xl text-xl font-semibold lg:pl-[90px] px-2 text-black">
+              <div className="space-y-2 lg:space-y-4">
+                <h2 className="lg:text-3xl text-base font-semibold lg:pl-[90px] px-2 text-black">
                   Average One Hour
                 </h2>
                 <div className="grid grid-cols-2">
@@ -439,33 +478,35 @@ function CardNoStatus() {
                     />
                   </div>
                 </div>
-                <h2 className="lg:text-3xl text-xl font-semibold mt-6 lg:pl-[90px] px-2 text-black">
+                <h2 className="lg:text-3xl text-base font-semibold lg:mt-6 mt-2 lg:pl-[90px] px-2 text-black">
                   Eggs
                 </h2>
                 <div className="grid grid-cols-2">
-                  <InfoCard color="#2196F3" title="Active" value={43} />
+                  <InfoCard color="#2196F3" title="Active" value={telur} />
                   <div className="lg:mr-[110px] mr-0 lg:-ml-[110px]">
-                    <InfoCard color="#F48FB1" title="Hatched" value={5} />
+                    <InfoCard color="#F48FB1" title="Hatched" value={telur} />
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <h2 className="text-xl font-semibold mt-6 text-black">Sensor Data</h2>
+          <h2 className="lg:text-xl text-base font-semibold mt-6 text-black lg:ml-0 ml-3">
+            Sensor Data
+          </h2>
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Filter Section */}
             <div className="lg:w-1/3 bg-gray-100 p-6 rounded-lg shadow-md">
-              <h2 className="lg:text-xl text-lg font-semibold text-black mb-4">
+              <h2 className="lg:text-xl text-base font-semibold text-black mb-4">
                 Find
               </h2>
               <input
                 value={filter}
                 onChange={handleFilterChange}
                 placeholder="Search by ID or Temp or Humid"
-                className="w-full p-2 border border-gray-300 bg-white rounded-md mb-4 text-black"
+                className="w-full p-2 border border-gray-300 bg-white rounded-md lg:mb-4 mb-2 text-black lg:text-base text-sm"
               />
-              <h2 className="lg:text-xl text-lg font-semibold text-black mb-4">
+              <h2 className="lg:text-xl text-base font-semibold text-black lg:mb-4 mb-2">
                 Filter
               </h2>
               {/* <select
@@ -526,12 +567,12 @@ function CardNoStatus() {
               Type="Filtered Data"
               limitData={30}
             />
-            <div className="lg:w-1/3 bg-gray-100 p-6 rounded-lg shadow-md">
-              <h2 className="lg:text-xl text-lg font-semibold text-black mb-4">
+            <div className="lg:w-1/3 bg-gray-100 px-6 py-2 rounded-lg shadow-md">
+              <h2 className="lg:text-xl text-base font-semibold text-black mb-4">
                 Average By Filtered
               </h2>
               <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="bg-white p-4 rounded-lg shadow-md text-center">
+                <div className="bg-white lg:p-4 p-2 rounded-lg shadow-md text-center">
                   <h3 className="lg:text-lg text-sm font-semibold text-gray-700">
                     Average Suhu
                   </h3>
@@ -539,7 +580,7 @@ function CardNoStatus() {
                     {averageTemp.toFixed(2)}°C
                   </p>
                 </div>
-                <div className="bg-white p-4 rounded-lg shadow-md text-center">
+                <div className="bg-white lg:p-4 p-2 rounded-lg shadow-md text-center">
                   <h3 className="lg:text-lg text-sm font-semibold text-gray-700">
                     Average Humid
                   </h3>
@@ -547,7 +588,7 @@ function CardNoStatus() {
                     {averageHumid.toFixed(2)}%
                   </p>
                 </div>
-                <div className="bg-white p-4 rounded-lg shadow-md text-center">
+                <div className="bg-white lg:p-4 p-2 rounded-lg shadow-md text-center">
                   <h3 className="lg:text-lg text-sm font-semibold text-gray-700">
                     Average Gas
                   </h3>
@@ -557,96 +598,122 @@ function CardNoStatus() {
                 </div>
                 <button
                   onClick={handlePrintPDF}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 lg:text-base text-sm"
                 >
                   Print to PDF
                 </button>
               </div>
             </div>
           </div>
-          {/* Table Section */}
-          <div className="lg:w-2/3">
-            {isLoading ? (
-              <p>Loading data...</p>
-            ) : (
-              <div className="relative">
-                <div className="lg:bg-transparent overflow-hidden">
-                  <div className="overflow-x-auto lg:w-1/2 w-full">
-                    <h2 className="lg:text-xl text-lg font-semibold text-black lg:my-[20px] my-4 ">
-                      Data
-                    </h2>
-                    <table className="w-full border-collapse border border-gray-300">
-                      <thead>
-                        <tr className="bg-gray-200">
-                          <th className="lg:w-10 w-8 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
-                            No
-                          </th>
-                          <th className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
-                            Temp
-                          </th>
-                          <th className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
-                            Humid
-                          </th>
-                          <th className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
-                            Gas
-                          </th>
-                          <th className="lg:w-32 w-28 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
-                            Timestamp
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {currentItems.map((item: any) => (
-                          <tr key={item.id}>
-                            <td className="lg:w-10 w-8 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
-                              {item.id}
-                            </td>
-                            <td className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
-                              {item.suhu}
-                            </td>
-                            <td className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
-                              {item.humid}
-                            </td>
-                            <td className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
-                              {item.gas}
-                            </td>
-                            <td className="lg:w-32 w-28 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px] truncate">
-                              {item.ts}
-                            </td>
+          <div className="flex flex-wrap lg:flex-nowrap w-full gap-2">
+            {/* Table Section */}
+            <div className="lg:w-1/2 w-full">
+              {isLoading ? (
+                <p>Loading data...</p>
+              ) : (
+                <div className="relative">
+                  <div className="lg:bg-transparent overflow-hidden">
+                    <div className="overflow-x-auto w-full">
+                      <h2 className="lg:text-xl text-base font-semibold text-black lg:my-[20px] my-4 ">
+                        Data
+                      </h2>
+                      <table className="w-full border-collapse border border-gray-300">
+                        <thead>
+                          <tr className="bg-gray-200">
+                            <th className="lg:w-10 w-8 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
+                              No
+                            </th>
+                            <th className="lg:w-28 w-8 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px] lg:block hidden">
+                              ID
+                            </th>
+                            <th className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
+                              Temp
+                            </th>
+                            <th className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
+                              Humid
+                            </th>
+                            <th className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
+                              Gas
+                            </th>
+                            <th className="lg:w-20 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
+                              Lamp
+                            </th>
+                            <th className="lg:w-20 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
+                              Fan
+                            </th>
+                            <th className="lg:w-32 w-28 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px] truncate">
+                              Timestamp
+                            </th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {currentItems.map((item: any) => (
+                            <tr key={item.id}>
+                              <td className="lg:w-10 w-8 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
+                                {item.id}
+                              </td>
+                              <td className="lg:w-28 w-8 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px] lg:block hidden">
+                                {item.id_produk}
+                              </td>
+                              <td className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
+                                {item.suhu}
+                              </td>
+                              <td className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
+                                {item.humid}
+                              </td>
+                              <td className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
+                                {item.gas}
+                              </td>
+                              <td className="lg:w-20 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
+                                {item.lampu}
+                              </td>
+                              <td className="lg:w-20 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
+                                {item.fan}
+                              </td>
+                              <td className="lg:w-32 w-28 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px] truncate">
+                                {item.ts}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
 
-                    {/* Pagination */}
-                    <div className="flex justify-between items-center mt-4">
-                      <button
-                        disabled={currentPage === 1}
-                        onClick={() => setCurrentPage(currentPage - 1)}
-                        className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:opacity-50"
-                      >
-                        Prev
-                      </button>
-                      <span className="text-black">
-                        Page {currentPage} of {totalPages}
-                      </span>
-                      <button
-                        disabled={currentPage === totalPages}
-                        onClick={() => setCurrentPage(currentPage + 1)}
-                        className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:opacity-50"
-                      >
-                        Next
-                      </button>
+                      {/* Pagination */}
+                      <div className="flex justify-between items-center mt-4">
+                        <button
+                          disabled={currentPage === 1}
+                          onClick={() => setCurrentPage(currentPage - 1)}
+                          className="lg:px-4 px-2 lg:py-2 py-1 bg-blue-500 text-white rounded-md disabled:opacity-50 text-sm"
+                        >
+                          Prev
+                        </button>
+                        <span className="text-black">
+                          Page {currentPage} of {totalPages}
+                        </span>
+                        <button
+                          disabled={currentPage === totalPages}
+                          onClick={() => setCurrentPage(currentPage + 1)}
+                          className="lg:px-4 px-2 lg:py-2 py-1 bg-blue-500 text-white rounded-md disabled:opacity-50 text-sm"
+                        >
+                          Next
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+            <TemperatureBarChart
+              minHumidity={minHumid}
+              maxHumidity={maxHumid}
+              minTemp={minTemp}
+              maxTemp={maxTemp}
+            />
           </div>
         </div>
       )}
     </div>
   );
-}
+};
 
-export default CardNoStatus;
+export default CardIncubeReport;

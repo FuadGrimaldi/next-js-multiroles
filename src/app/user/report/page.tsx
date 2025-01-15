@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
+import ReportCom from "@/components/report/report";
 
 export const metadata: Metadata = {
   title: "Report Incube",
@@ -25,7 +26,7 @@ const Report = async () => {
         Report
       </h1>
       <div className="h-max-screen">
-        <CardNoStatus /> {/* Menggunakan komponen Card */}
+        <ReportCom />
       </div>
     </div>
   );
