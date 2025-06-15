@@ -137,7 +137,7 @@ const Signin = () => {
               <div className="mb-5">
                 <button
                   aria-label="Sign In"
-                  className="w-full rounded-sm bg-[#10375C] hover:text-[#F3C623] transition-all duration-500 py-3 px-5 font-medium lg:text-xl text-lg"
+                  className="w-full rounded-sm bg-[#10375C] hover:text-[#F3C623] transition-all duration-500 py-3 px-5 font-medium lg:text-xl text-lg text-white"
                   type="submit"
                   disabled={isLoading}
                 >

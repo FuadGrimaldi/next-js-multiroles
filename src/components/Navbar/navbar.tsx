@@ -42,7 +42,7 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
               <Link
                 href="/"
                 className={`text-base hover:underline transition-all duration-500 ${
-                  pathName === "/" ? "bg-[#10375C]" : "bg-none"
+                  pathName === "/" ? "bg-white" : "bg-none"
                 }`}
               >
                 Home
@@ -106,7 +106,7 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
               <Link
                 href="/"
                 className={`text-xl hover:underline transition-all duration-500 ${
-                  pathName === "/" ? "text-[#10375C]" : "text-white"
+                  pathName === "/" ? "text-[#10375C]" : "text-black"
                 }`}
               >
                 Home
@@ -123,7 +123,7 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
               <Link
                 href="/#Features"
                 className={`text-xl hover:underline transition-all duration-500 ${
-                  pathName === "/#Features" ? "text-[#10375C]" : "text-white"
+                  pathName === "/#Features" ? "text-[#10375C]" : "text-black"
                 }`}
               >
                 Features
@@ -140,7 +140,7 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
               <Link
                 href="/support"
                 className={`text-xl hover:underline transition-all duration-500 ${
-                  pathName === "/support" ? "text-[#10375C]" : "text-white"
+                  pathName === "/support" ? "text-[#10375C]" : "text-black"
                 }`}
               >
                 Support
@@ -159,7 +159,7 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
                   <Link
                     href="/docs/faq"
                     className={`text-base hover:underline transition-all duration-500 ${
-                      pathName === "/docs/faq" ? "text-[#10375C]" : "text-white"
+                      pathName === "/docs/faq" ? "text-[#10375C]" : "text-black"
                     }`}
                   >
                     FAQ
@@ -171,7 +171,7 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
                     className={`text-base hover:underline transition-all duration-500 ${
                       pathName === "/docs/howto"
                         ? "text-[#10375C]"
-                        : "text-white"
+                        : "text-black"
                     }`}
                   >
                     Docs
@@ -184,7 +184,7 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
             <motion.div
               className={`${
                 pathName === "/login"
-                  ? "bg-[#10375C] text white "
+                  ? "bg-[#10375C] text-white "
                   : "bg-gray-100 text-[#3f2013]"
               } rounded-[15px] font-montserrat text-xl px-6 py-3}`}
               initial={{ opacity: 0, scale: 0.9 }}

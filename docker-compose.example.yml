@@ -32,8 +32,8 @@ services:
     container_name: mysql-incube
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: incube
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-incube}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
     volumes:
       - ./.docker/volumes/mysql:/var/lib/mysql
     ports:
@@ -46,8 +46,8 @@ services:
     container_name: phpmyadmin-incube
     restart: unless-stopped
     environment:
-      PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: root
+      PMA_HOST: ${PMA_HOST:-db}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
     ports:
       - "8080:80"
     depends_on:
