@@ -1,3 +1,8 @@
 node_modules
-vendor
+.next
+*.log
 .git
+Dockerfile
+docker-compose.yml
+*.tsbuildinfo
+.Docker
