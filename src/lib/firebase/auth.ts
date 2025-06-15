@@ -60,7 +60,6 @@ export async function register(data: {
 }
 
 export async function login(data: { email: string; password: string }) {
-  console.log("Login request received:", data);
   const q = query(
     collection(firestore, "users"),
     where("email", "==", data.email)

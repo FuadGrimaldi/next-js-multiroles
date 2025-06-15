@@ -59,7 +59,6 @@ const EditProfileForm: React.FC<any> = () => {
 
     try {
       const id = idUser;
-      console.log(id);
 
       const response = await fetch(`/api/user/${id}`, {
         method: "PUT",

@@ -42,7 +42,6 @@ export const saveToFirestore = async (collectionName: string, data: object) => {
       collection(firestore, collectionName),
       dataWithTimestamp
     );
-    console.log("Data berhasil disimpan ke Firestore dengan ID:", docRef.id);
   } catch (error) {
     console.error("Error menyimpan data ke Firestore:", error);
   }
@@ -61,7 +60,6 @@ export const updateFirestoreDocument = async (
 ) => {
   try {
     await setDoc(doc(firestore, collectionName, docId), data, { merge: true });
-    console.log("Data berhasil diperbarui di Firestore");
   } catch (error) {
     console.error("Error memperbarui data di Firestore:", error);
   }
@@ -71,10 +69,8 @@ export const syncLocalStorageToFirestore = async () => {
   try {
     const localData = getDataFromLocalStorage();
     if (localData) {
-      console.log("Data dari localStorage:", localData);
       await saveToFirestore("dataValue", localData);
     } else {
-      console.log("Data localStorage tidak ditemukan atau tidak valid.");
     }
   } catch (error) {
     console.error("Error dalam syncLocalStorageToFirestore:", error);

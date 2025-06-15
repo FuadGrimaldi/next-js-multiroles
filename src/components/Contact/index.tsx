@@ -170,13 +170,13 @@ const Contact = () => {
                 <h3 className="mb-2 text-lg font-medium text-black">
                   Our Location
                 </h3>
-                <p>Jalan Bekamin, no 45 kosan bu siti, Indonesia</p>
+                <p>Cikutra, no 45, kosan siti matoyah, Indonesia</p>
               </div>
               <div className="mb-7">
                 <h3 className="mb-2 text-lg font-medium text-black">
                   Email Address
                 </h3>
-                <p>company@inkube.com</p>
+                <p>incube@gmail.com</p>
               </div>
               <div className="mb-7">
                 <h3 className="mb-2 text-lg font-medium text-black">Call us</h3>

@@ -35,7 +35,6 @@ function Chart() {
     // Fetch real-time temperature data
     const unsubscribeTemp = onValue(tempRef, (snapshot) => {
       const newTemperature = snapshot.val();
-      console.log("New temperature:", newTemperature);
 
       const now = new Date();
       const currentHour = now.getHours().toString().padStart(2, "0");
@@ -59,7 +58,6 @@ function Chart() {
     // Fetch real-time humidity data
     const unsubscribeHumidity = onValue(humidityRef, (snapshot) => {
       const newHumidity = snapshot.val();
-      console.log("New humidity:", newHumidity);
 
       setHumidityData((prevData) => {
         const updatedData = [...prevData, newHumidity];

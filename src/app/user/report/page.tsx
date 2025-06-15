@@ -1,7 +1,6 @@
 import React from "react";
-import CardNoStatus from "@/components/Card/cardWithoutStatus";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import ReportCom from "@/components/report/report";

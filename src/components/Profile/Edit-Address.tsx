@@ -49,7 +49,7 @@ const UpdateAddressForm: React.FC = () => {
     };
 
     fetchAddressData();
-  }, []);
+  }, [userId]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

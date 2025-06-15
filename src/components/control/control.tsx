@@ -54,7 +54,6 @@ const ControlCom = () => {
           throw new Error("Failed to fetch profile data");
         }
         const data = await response.json();
-        console.log(data);
 
         setUserSubsData(data.data); // pastikan data berada dalam field 'data'
         setProductId(data.data.produk.id); // Ambil id produk

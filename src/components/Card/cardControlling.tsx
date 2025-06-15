@@ -1,13 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import "jspdf-autotable";
-import Paho from "paho-mqtt";
-import Swal from "sweetalert2";
-
-type ClientType = {
-  subscribe: (topic: string) => void;
-  on: (event: string, callback: (message: any) => void) => void;
-};
 
 interface reportParams {
   productId: string;
@@ -18,77 +11,60 @@ interface reportParams {
   telur: number;
 }
 
-const CardIncubeControll: React.FC<reportParams> = ({
-  productId = "",
-  nama = "",
-  tinggi = 0,
-  lebar = 0,
-  kapasitas = 0,
-  telur = 0,
-}) => {
+type thresholdType = {
+  min_suhu: number;
+  max_suhu: number;
+};
+
+const CardIncubeControll: React.FC<reportParams> = ({ productId = "" }) => {
   const [isOpen, setIsOpen] = useState(false); // Untuk mengontrol dropdown
+  const [loadingTH, setLoadingTH] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingFan, setLoadingFan] = useState<boolean>(false);
   const [responseMessage, setResponseMessage] = useState<string>("");
-  const [message, setMessage] = useState<string>("");
+  const [responseMessageFan, setResponseMessageFan] = useState<string>("");
+  const [responseMessageLam, setResponseMessageLam] = useState<string>("");
   const [threshold1, setThreshold1] = useState<number>(0);
   const [threshold2, setThreshold2] = useState<number>(0);
-  const [fanControl, setFanControl] = useState<string>("");
-  const [client, setClient] = useState<ClientType | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
+  const [threshold, setThreshold] = useState<thresholdType>({
+    min_suhu: 0,
+    max_suhu: 0,
+  });
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const connectToMqttBroker = async () => {
-    const clientID = "clientID-incube-mqtt";
-    const host = "broker.hivemq.com";
-    const port = 8000;
-
-    const mqttClient: any = new Paho.Client(host, Number(port), clientID);
-
-    mqttClient.onMessageArrived = messageArrived;
-
-    mqttClient.connect({
-      onSuccess: () => {
-        setClient(mqttClient);
-        setIsConnected(true);
-      },
-      onFailure: (message: any) => {
-        setIsConnected(false);
-      },
-    });
-  };
-
-  const messageArrived = (message: any) => {
-    const payload = message.payloadString;
-    const topic = message.destinationName;
-
-    if (topic === `${productId}/earlyTh`) {
-      setThreshold1(Number(payload));
-    } else if (topic === `${productId}/endTh`) {
-      setThreshold2(Number(payload));
-    }
-  };
-  const subscribeToTopic = (topic: string) => {
-    if (client && isConnected && topic) {
-      client.subscribe(topic);
-    }
-  };
-
   useEffect(() => {
-    if (!isConnected) {
-      connectToMqttBroker();
-    }
-  }, [isConnected]);
+    const fetcThreshold = async () => {
+      try {
+        const response = await fetch(`/api/device-setting/${productId}`, {
+          method: "GET",
+        });
 
-  // Berlangganan ke topik setelah client terhubung
-  useEffect(() => {
-    if (client && isConnected) {
-      subscribeToTopic(`${productId}/earlyTh`);
-      subscribeToTopic(`${productId}/endTh`);
-    }
-  }, [client, isConnected]);
+        if (!response.ok) {
+          throw new Error("Failed to fetch profile data");
+        }
+
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          const { min_suhu, max_suhu } = result.data;
+          setThreshold({ min_suhu, max_suhu });
+          setThreshold1(min_suhu);
+          setThreshold2(max_suhu);
+        }
+      } catch (error) {
+        setResponseMessage(
+          `Error: ${error instanceof Error ? error.message : "Unknown error"}`
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetcThreshold();
+  }, [productId]);
 
   const handleSliderChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
     setThreshold1(Number(event.target.value)); // Update threshold langsung
@@ -98,46 +74,95 @@ const CardIncubeControll: React.FC<reportParams> = ({
   };
 
   const handleSubmitTh = async () => {
-    setLoading(true);
+    setLoadingTH(true);
     setResponseMessage(""); // Reset response message
     try {
-      const response = await fetch(
-        `/api/data/threshold/${productId}/?minThreshold=${threshold1}&maxThreshold=${threshold2}`,
-        {
-          method: "GET",
-        }
-      );
+      const response = await fetch(`/api/update-threshold/${productId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          min_suhu: threshold1,
+          max_suhu: threshold2,
+        }),
+      });
+
       const data = await response.json();
 
+      if (!response.ok || data.meta?.code !== 200) {
+        throw new Error(data.meta?.message || "Failed to update threshold");
+      }
+
       if (response.ok) {
-        setResponseMessage(`Success: ${data.message}`);
+        setResponseMessage(`Success: ${data.meta.message}`);
       } else {
-        setResponseMessage(`Error: ${data.message}`);
+        setResponseMessage(`Error: ${data.meta.message}`);
       }
     } catch (error: any) {
       setResponseMessage(`Error: ${error.message}`);
     } finally {
-      setLoading(false);
+      setLoadingTH(false);
     }
   };
-  const handleControl = async (state: string) => {
-    setLoading(true);
-    setMessage("");
-    setFanControl(state);
+  const handleControlFan = async (state: string) => {
+    setLoadingFan(true);
+    setResponseMessageFan(""); // Reset response message
     try {
-      const response = await fetch(
-        `/api/data/relay/${productId}/?state=${state}`,
-        { method: "GET" }
-      );
+      const response = await fetch(`/api/update-fan-status/${productId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fan: state,
+        }),
+      });
+
       const data = await response.json();
 
+      if (!response.ok || data.meta?.code !== 200) {
+        throw new Error(data.meta?.message || "Failed to update threshold");
+      }
+
       if (response.ok) {
-        setMessage(`Relay ${state.toUpperCase()} successfully triggered.`);
+        setResponseMessageFan(`Success: ${data.meta.message}`);
       } else {
-        setMessage(`Error triggering relay: ${data.message}`);
+        setResponseMessageFan(`Error: ${data.meta.message}`);
       }
     } catch (error: any) {
-      setMessage(`Error: ${error.message}`);
+      setResponseMessageFan(`Error: ${error.message}`);
+    } finally {
+      setLoadingFan(false);
+    }
+  };
+  const handleControlLamp = async (state: string) => {
+    setLoading(true);
+    setResponseMessageLam(""); // Reset response message
+    try {
+      const response = await fetch(`/api/update-lampu-status/${productId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          lampu: state,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || data.meta?.code !== 200) {
+        throw new Error(data.meta?.message || "Failed to update threshold");
+      }
+
+      if (response.ok) {
+        setResponseMessageLam(`Success: ${data.meta.message}`);
+      } else {
+        setResponseMessageLam(`Error: ${data.meta.message}`);
+      }
+    } catch (error: any) {
+      setResponseMessageLam(`Error: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -219,12 +244,12 @@ const CardIncubeControll: React.FC<reportParams> = ({
               <div className="flex justify-center items-center">
                 <button
                   onClick={handleSubmitTh}
-                  disabled={loading}
+                  disabled={loadingTH}
                   className={`px-6 lg:py-[46px] py-2 w-full text-black bg-yellow-500 rounded-md hover:bg-yellow-600 text-base ${
-                    loading ? "opacity-50 cursor-not-allowed" : ""
+                    loadingTH ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                 >
-                  {loading ? "Setting..." : "Set Threshold"}
+                  {loadingTH ? "Loading..." : "Set Threshold"}
                 </button>
               </div>
             </div>
@@ -240,37 +265,45 @@ const CardIncubeControll: React.FC<reportParams> = ({
               </div>
             )}
 
-            <h1 className="lg:text-xl text-lg font-bold text-black font-montserrat my-3">
+            <h1 className="text-lg lg:text-xl font-bold text-black font-montserrat my-3">
               Fan Control
             </h1>
             <p className="text-gray-600 mb-4">
-              Control Fan Manual Menggunakan tombol dibawah:
+              Control Fan secara manual menggunakan tombol di bawah:
             </p>
-            <div className="flex bg-gray-100 p-2 rounded-lg shadow-md text-sm">
-              <div className="lg:space-x-4 space-x-1">
+
+            <div className="flex flex-wrap gap-2 bg-gray-100 p-4 rounded-lg shadow-md text-sm">
+              {[
+                { label: "Turn ON", state: "ON", color: "green" },
+                { label: "Turn OFF", state: "OFF", color: "red" },
+                { label: "Turn AUTO", state: "AUTO", color: "yellow" },
+              ].map(({ label, state, color }) => (
                 <button
-                  onClick={() => handleControl("on")}
-                  className="lg:px-6 px-4 lg:py-2 py-1 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition duration-200"
+                  key={state}
+                  onClick={() => handleControlFan(state)}
+                  disabled={loadingFan}
+                  className={`px-4 py-2 rounded-lg text-white shadow-md transition duration-200
+                    bg-${color}-500 hover:bg-${color}-600
+                    ${loadingFan ? "opacity-50 cursor-not-allowed" : ""}
+                  `}
                 >
-                  Turn ON
+                  {label}
                 </button>
-                <button
-                  onClick={() => handleControl("off")}
-                  className="lg:px-6 px-4 lg:py-2 py-1 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition duration-200"
-                >
-                  Turn OFF
-                </button>
-              </div>
+              ))}
             </div>
-            {message && (
+
+            {responseMessageFan && (
               <div
-                className={`mt-4 p-2 text-black rounded-md ${
-                  message ? "bg-yellow-500" : "bg-red-500"
+                className={`mt-4 p-2 text-white font-medium rounded-md ${
+                  responseMessageFan.startsWith("Success")
+                    ? "bg-green-600"
+                    : "bg-red-600"
                 }`}
               >
-                {message}
+                {responseMessageFan}
               </div>
             )}
+
             <h1 className="lg:text-xl text-lg font-bold text-black font-montserrat my-3">
               Lamp Control
             </h1>
@@ -280,26 +313,43 @@ const CardIncubeControll: React.FC<reportParams> = ({
             <div className="flex bg-gray-100 p-2 rounded-lg shadow-md text-sm">
               <div className="lg:space-x-4 space-x-1">
                 <button
-                  onClick={() => handleControl("on")}
-                  className="lg:px-6 px-4 lg:py-2 py-1 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition duration-200"
+                  onClick={() => handleControlLamp("ON")}
+                  disabled={loading}
+                  className={`lg:px-6 px-4 lg:py-2 py-1 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition duration-200 ${
+                    loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 >
                   Turn ON
                 </button>
                 <button
-                  onClick={() => handleControl("off")}
-                  className="lg:px-6 px-4 lg:py-2 py-1 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition duration-200"
+                  onClick={() => handleControlLamp("OFF")}
+                  disabled={loading}
+                  className={`lg:px-6 px-4 lg:py-2 py-1 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition duration-200 ${
+                    loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 >
                   Turn OFF
                 </button>
+                <button
+                  onClick={() => handleControlLamp("AUTO")}
+                  disabled={loading}
+                  className={`lg:px-6 px-4 lg:py-2 py-1 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 transition duration-200 ${
+                    loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                >
+                  Turn AUTO
+                </button>
               </div>
             </div>
-            {message && (
+            {responseMessageLam && (
               <div
                 className={`mt-4 p-2 text-black rounded-md ${
-                  message ? "bg-yellow-500" : "bg-red-500"
+                  responseMessageLam.startsWith("Success")
+                    ? "bg-yellow-500"
+                    : "bg-red-500"
                 }`}
               >
-                {message}
+                {responseMessageLam}
               </div>
             )}
           </div>

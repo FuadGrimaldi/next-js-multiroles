@@ -1,7 +1,7 @@
 // File: /pages/dashboard.tsx
 import React from "react";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import Dashboard from "@/components/dashboard/dashboard";
@@ -14,7 +14,6 @@ export const metadata: Metadata = {
 
 const DashboardPage = async () => {
   const session = await getServerSession(authOptions);
-  console.log(session?.user.id);
 
   if (!session) {
     redirect("/login");

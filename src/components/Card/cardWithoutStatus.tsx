@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Paho from "paho-mqtt";
 import ChartWeekly from "../chart/ChartWeekly";
 import InfoCard from "./infoCard";
@@ -92,7 +92,31 @@ const CardIncubeReport: React.FC<reportParams> = ({
     }
   }, []);
 
-  const connectToMqttBroker = async () => {
+  const messageArrived = useCallback(
+    (message: any) => {
+      const payload = parseFloat(message.payloadString);
+      const topic = message.destinationName;
+
+      if (topic === `${productId}/Temp`) {
+        setTemp(payload);
+        setTempData((prevData) => {
+          const newData = [...prevData, payload].slice(-7); // Menyimpan data harian untuk 7 hari
+          localStorage.setItem("tempData", JSON.stringify(newData)); // Simpan di localStorage
+          return newData;
+        });
+      } else if (topic === `${productId}/Humid`) {
+        setHumid(payload);
+        setHumidData((prevData) => {
+          const newData = [...prevData, payload].slice(-7);
+          localStorage.setItem("humidData", JSON.stringify(newData)); // Simpan di localStorage
+          return newData;
+        });
+      }
+    },
+    [productId]
+  );
+
+  const connectToMqttBroker = useCallback(() => {
     const clientID = "clientID-inc-mqtt";
     const host = "broker.hivemq.com";
     const port = 8000;
@@ -116,47 +140,29 @@ const CardIncubeReport: React.FC<reportParams> = ({
         setIsConnected(false);
       },
     });
-  };
+  }, [messageArrived]);
 
-  const messageArrived = (message: any) => {
-    const payload = parseFloat(message.payloadString);
-    const topic = message.destinationName;
-
-    if (topic === `${productId}/Temp`) {
-      setTemp(payload);
-      setTempData((prevData) => {
-        const newData = [...prevData, payload].slice(-7); // Menyimpan data harian untuk 7 hari
-        localStorage.setItem("tempData", JSON.stringify(newData)); // Simpan di localStorage
-        return newData;
-      });
-    } else if (topic === `${productId}/Humid`) {
-      setHumid(payload);
-      setHumidData((prevData) => {
-        const newData = [...prevData, payload].slice(-7);
-        localStorage.setItem("humidData", JSON.stringify(newData)); // Simpan di localStorage
-        return newData;
-      });
-    }
-  };
-
-  const subscribeToTopic = (topic: string) => {
-    if (client && isConnected && topic) {
-      client.subscribe(topic);
-    }
-  };
+  const subscribeToTopic = useCallback(
+    (topic: string) => {
+      if (client && isConnected && topic) {
+        client.subscribe(topic);
+      }
+    },
+    [client, isConnected]
+  );
 
   useEffect(() => {
     if (!isConnected) {
       connectToMqttBroker();
     }
-  }, [isConnected]);
+  }, [isConnected, connectToMqttBroker]);
 
   useEffect(() => {
     if (client && isConnected) {
       subscribeToTopic(`${productId}/Temp`);
       subscribeToTopic(`${productId}/Humid`);
     }
-  }, [client, isConnected]);
+  }, [client, isConnected, productId, subscribeToTopic]);
 
   // Menghitung rata-rata mingguan setiap kali data diperbarui
   useEffect(() => {
@@ -206,7 +212,7 @@ const CardIncubeReport: React.FC<reportParams> = ({
     };
 
     fetchData();
-  }, []);
+  }, [productId]);
 
   // Filter Data
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -274,8 +280,44 @@ const CardIncubeReport: React.FC<reportParams> = ({
   //   setFilteredData(filtered);
   // };
 
+  const calculateAverages = useCallback(() => {
+    if (filteredData.length > 0) {
+      const totalTemp = filteredData.reduce((sum, item) => sum + item.suhu, 0);
+      const totalHumid = filteredData.reduce(
+        (sum, item) => sum + item.humid,
+        0
+      );
+      const totalGas = filteredData.reduce((sum, item) => sum + item.gas, 0);
+      // Hitung nilai maksimum dan minimum
+      const maxTemp = Math.max(...filteredData.map((item) => item.suhu));
+      const minTemp = Math.min(...filteredData.map((item) => item.suhu));
+
+      const maxHumid = Math.max(...filteredData.map((item) => item.humid));
+      const minHumid = Math.min(...filteredData.map((item) => item.humid));
+
+      setMaxTemp(maxTemp);
+      setMinTemp(minTemp);
+
+      setMaxHumid(maxHumid);
+      setMinHumid(minHumid);
+
+      setAverageTemp(totalTemp / filteredData.length);
+      setAverageHumid(totalHumid / filteredData.length);
+      setAverageGas(totalGas / filteredData.length);
+    } else {
+      setAverageTemp(0);
+      setAverageHumid(0);
+      setAverageGas(0);
+      setMaxTemp(0);
+      setMinTemp(0);
+
+      setMaxHumid(0);
+      setMinHumid(0);
+    }
+  }, [filteredData]);
+
   // Handle Filter by Date Range
-  const handleFilterByDateRange = () => {
+  const handleFilterByDateRange = useCallback(() => {
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
@@ -314,42 +356,7 @@ const CardIncubeReport: React.FC<reportParams> = ({
     } else {
       console.error("Please select both start and end dates");
     }
-  };
-  const calculateAverages = () => {
-    if (filteredData.length > 0) {
-      const totalTemp = filteredData.reduce((sum, item) => sum + item.suhu, 0);
-      const totalHumid = filteredData.reduce(
-        (sum, item) => sum + item.humid,
-        0
-      );
-      const totalGas = filteredData.reduce((sum, item) => sum + item.gas, 0);
-      // Hitung nilai maksimum dan minimum
-      const maxTemp = Math.max(...filteredData.map((item) => item.suhu));
-      const minTemp = Math.min(...filteredData.map((item) => item.suhu));
-
-      const maxHumid = Math.max(...filteredData.map((item) => item.humid));
-      const minHumid = Math.min(...filteredData.map((item) => item.humid));
-
-      setMaxTemp(maxTemp);
-      setMinTemp(minTemp);
-
-      setMaxHumid(maxHumid);
-      setMinHumid(minHumid);
-
-      setAverageTemp(totalTemp / filteredData.length);
-      setAverageHumid(totalHumid / filteredData.length);
-      setAverageGas(totalGas / filteredData.length);
-    } else {
-      setAverageTemp(0);
-      setAverageHumid(0);
-      setAverageGas(0);
-      setMaxTemp(0);
-      setMinTemp(0);
-
-      setMaxHumid(0);
-      setMinHumid(0);
-    }
-  };
+  }, [data, startDate, endDate, calculateAverages]);
 
   const handlePrintPDF = () => {
     if (!startDate || !endDate) {
@@ -420,7 +427,7 @@ const CardIncubeReport: React.FC<reportParams> = ({
 
   useEffect(() => {
     handleFilterByDateRange();
-  }, [startDate, endDate]);
+  }, [startDate, endDate, handleFilterByDateRange]);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };

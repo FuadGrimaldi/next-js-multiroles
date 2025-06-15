@@ -14,8 +14,8 @@ interface SidebarProps {
 }
 
 const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
-  const username = localStorage.getItem("username");
-  const company = localStorage.getItem("email");
+  const [username, setUsername] = useState<string | null>(null);
+  const [company, setCompany] = useState<string | null>(null);
   const profilePic =
     "https://img.mbiz.web.id/180x180/erp/R2p1IXoyVEpBMk01WOEAdaI3hHVlkuIg0wW5_pn-CJCKHSrA_n1-U1tfE7Bl5H4_4Z7AxgL0DPOmUCdPuCHHC5lWvMU5Ig3t1uDrkVN53MlWlnA";
   const link = "/";
@@ -41,6 +41,8 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
     if (typeof window !== "undefined") {
       // Set active link hanya saat di client-side
       setActiveLink(window.location.pathname);
+      setUsername(localStorage.getItem("username"));
+      setCompany(localStorage.getItem("email"));
     }
   }, []);
 
@@ -384,7 +386,12 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
                       : "h-12 w-12"
                   }`}
                 >
-                  <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                  <Image
+                    src="/assets/user/user-02.png"
+                    alt="Profile"
+                    width={100}
+                    height={100}
+                  />
                 </div>
                 <div
                   className={`text-lg font-semibold tex-white mt-3 truncate duration-300 ${

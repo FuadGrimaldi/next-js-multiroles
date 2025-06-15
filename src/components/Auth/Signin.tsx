@@ -34,7 +34,6 @@ const Signin = () => {
 
       if (response.status === 200 && response.data) {
         const userId = response.data.user.id;
-        // console.log("ini di singin ", userId);
 
         localStorage.setItem("id", userId);
         localStorage.setItem("username", response.data.user.username);

@@ -21,7 +21,6 @@ export async function GET(
 
   try {
     const ESP32_URL = `${BASE_URL}/${params.productId}`;
-    console.log(params.productId);
 
     const response = await axios.get(ESP32_URL, {
       params: { state },

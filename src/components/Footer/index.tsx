@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Image from "next/image";
 
 const Footer = () => {
   return (
@@ -6,15 +7,17 @@ const Footer = () => {
       <div className="mx-auto px-6 sm:px-6 lg:px-[120px]">
         <div className="grid grid-cols-2 md:col-span-3 lg:grid-cols-4 gap-y-16 gap-x-12">
           <div className="col-span-2 md:col-span-3 lg:col-span-2">
-            <img
+            <Image
               className="w-auto h-[50px]"
               src="/assets/logo2 2.png"
               alt="logo"
+              width={150} // nilai bisa berapa saja
+              height={50}
             />
 
             <p className="text-base leading-relaxed text-gray-600 mt-7">
-              Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-              amet sint. Velit officia consequat duis enim velit mollit.
+              What we offer we create features that helps you to hatch your egg
+              faster and easier, wherever you are
             </p>
 
             <ul className="flex items-center space-x-3 mt-9">

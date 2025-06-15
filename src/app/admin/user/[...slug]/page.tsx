@@ -7,7 +7,6 @@ type UserDetailPageProps = {
 
 export default function UserDetailPage(props: UserDetailPageProps) {
   const { params } = props;
-  console.log(params.slug);
 
   return (
     <main>

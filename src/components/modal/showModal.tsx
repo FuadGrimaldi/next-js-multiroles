@@ -55,7 +55,6 @@ const PassKeyModal = () => {
 
   const subscribeToPasskey = () => {
     // Logic for subscribing to the newsletter
-    console.log("Entering passkey:", passkey);
     setShowModal(false);
   };
 

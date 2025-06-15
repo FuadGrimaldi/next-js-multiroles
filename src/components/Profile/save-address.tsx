@@ -45,9 +45,6 @@ const SaveAddressForm: React.FC = () => {
         },
         body: JSON.stringify(addressData),
       });
-      console.log(addressData);
-
-      console.log(response);
 
       if (!response.ok) {
         const errorText = await response.text(); // Get error response text
