@@ -1,0 +1,48 @@
+name: Deploy to EC2 via SSH
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      - name: Build & Push Docker image
+        run: |
+          docker build -t fuadgrimaldi/fullstack-incube:latest .
+          docker push fuadgrimaldi/fullstack-incube:latest
+
+      - name: Setup SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@13.211.140.65 << 'EOF'
+            cd ~/next-js-multiroles
+
+            echo "🛑 Stopping containers..."
+            docker compose down
+
+            echo "🧼 Pruning old image..."
+            docker image prune -af
+
+            echo "🐳 Pulling latest image from Docker Hub..."
+            docker pull fuadgrimaldi/fullstack-incube:latest
+
+            echo "🚀 Starting containers..."
+            docker compose up -d
+
+            echo "✅ Reloading Nginx with SSL..."
+            sudo nginx -t && sudo systemctl reload nginx
+          EOF

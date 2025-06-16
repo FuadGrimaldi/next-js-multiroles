@@ -95,7 +95,7 @@ const Landingpage = () => {
                   Order Now
                 </a>
 
-                <a
+                {/* <a
                   href="#"
                   title=""
                   className="inline-flex items-center px-4 py-4 mt-4 text-lg transition-all duration-200 bg-transparent border border-transparent sm:mt-0 font-pj justif-center rounded-xl hover:bg-[#ffb800] lg:text-white text-black"
@@ -116,7 +116,7 @@ const Landingpage = () => {
                     ></path>
                   </svg>
                   Download Mobile App
-                </a>
+                </a> */}
               </motion.div>
             </motion.div>
           </div>
