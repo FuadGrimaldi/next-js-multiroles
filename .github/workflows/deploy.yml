@@ -34,8 +34,8 @@ jobs:
             echo "🛑 Stopping containers..."
             docker compose down
 
-            echo "🧼 Pruning old image..."
-            docker image prune -af
+            echo "🧼 Removing old image (if any)..."
+            docker rmi fuadgrimaldi/fullstack-incube:latest || true
 
             echo "🐳 Pulling latest image from Docker Hub..."
             docker pull fuadgrimaldi/fullstack-incube:latest
