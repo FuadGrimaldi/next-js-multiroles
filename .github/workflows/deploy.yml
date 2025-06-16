@@ -32,16 +32,16 @@ jobs:
             cd ~/next-js-multiroles
 
             echo "🛑 Stopping containers..."
-            docker compose down
+            sudo docker compose down
 
             echo "🧼 Removing old image (if any)..."
-            docker rmi fuadgrimaldi/fullstack-incube:latest || true
+            sudo docker rmi fuadgrimaldi/fullstack-incube:latest || true
 
             echo "🐳 Pulling latest image from Docker Hub..."
-            docker pull fuadgrimaldi/fullstack-incube:latest
+            sudo docker pull fuadgrimaldi/fullstack-incube:latest
 
             echo "🚀 Starting containers..."
-            docker compose up -d
+            sudo docker compose up -d
 
             echo "✅ Reloading Nginx with SSL..."
             sudo nginx -t && sudo systemctl reload nginx
