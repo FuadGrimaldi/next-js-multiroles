@@ -90,7 +90,7 @@ const CardIncubeDashboard: React.FC<incubeProductProps> = ({
   const connectToMqttBroker = useCallback(() => {
     const clientID = "clientID-inc-mqtt";
     const host = "broker.hivemq.com";
-    const port = 8000;
+    const port = 8884;
 
     const mqttClient: any = new Paho.Client(host, Number(port), clientID);
 
