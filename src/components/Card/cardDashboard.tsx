@@ -89,10 +89,12 @@ const CardIncubeDashboard: React.FC<incubeProductProps> = ({
 
   const connectToMqttBroker = useCallback(() => {
     const clientID = "clientID-inc-mqtt";
-    const host = "broker.hivemq.com";
-    const port = 8884;
 
-    const mqttClient: any = new Paho.Client(host, Number(port), clientID);
+    // ✅ Gunakan wss:// agar aman dengan HTTPS
+    const brokerUrl = "wss://broker.hivemq.com:8884/mqtt";
+
+    // ✅ Gunakan URL langsung saat membuat client
+    const mqttClient: any = new Paho.Client(brokerUrl, clientID);
 
     mqttClient.onMessageArrived = messageArrived;
 
@@ -118,6 +120,7 @@ const CardIncubeDashboard: React.FC<incubeProductProps> = ({
         setIsConnected(false);
         setStatisCon("Disconnected");
       },
+      useSSL: true, // ✅ wajib untuk koneksi WSS
     });
   }, [messageArrived]);
 
